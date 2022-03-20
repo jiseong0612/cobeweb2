@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 </div>
+</div>
 <!-- /#page-wrapper -->
 
 </div>
@@ -8,7 +9,6 @@
 
 <!-- jQuery 주석처리 -->
 <!-- <script src="/resources/vendor/jquery/jquery.min.js"></script> -->
-<script src="http://code.jquery.com/jquery-latest.js"></script>
 <!-- Bootstrap Core JavaScript -->
 <script src="/resources/vendor/bootstrap/js/bootstrap.min.js"></script>
 

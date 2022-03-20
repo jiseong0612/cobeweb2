@@ -1,14 +1,13 @@
 package org.zeorck.service;
 
-import java.util.List;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.zeorck.mapper.TimeMapperTests;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
+import org.zerock.domain.PageDTO;
 import org.zerock.service.BoardService;
 
 import lombok.extern.slf4j.Slf4j;
@@ -38,6 +37,14 @@ public class BoardServiceTests {
 	
 	@Test
 	public void getList() {
-		service.getList().forEach(li-> System.out.println("list = > " + li));
+		Criteria cri = new Criteria(2, 10);
+		service.getList(cri).forEach(li-> System.out.println("list = > " + li));
+	}
+	
+	@Test
+	public void pageDTOTEest() {
+		Criteria cri = new Criteria(1, 5);
+		PageDTO pdt = new PageDTO(cri, 250);
+		log.info("pdt = {}",pdt);
 	}
 }

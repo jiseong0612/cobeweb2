@@ -1,11 +1,14 @@
 package org.zeorck.mapper;
 
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 import org.zerock.mapper.BoardMapper;
 
 import lombok.extern.slf4j.Slf4j;
@@ -22,14 +25,24 @@ public class BoardMapperTests {
 		log.info("list ={}", mapper.getList());
 	}
 	
+	@Test
+	public void testPaging() {
+		Criteria cri = new Criteria();
+		cri.setType("W");
+		cri.setKeyword("1123");
+		List<BoardVO> list = mapper.getListWithPaging(cri);
+		list.forEach(b -> log.info("b = {}",b));
+	}
+	
 	@Test 
 	public void insert() {
-		BoardVO board = new BoardVO();
-		board.setTitle("bb");
-		board.setContent("bbContent");
-		board.setWriter("jiseong");
-		
-		mapper.insert(board);
+			
+			BoardVO board = new BoardVO();
+			board.setTitle("bb");
+			board.setContent("bbContent");
+			board.setWriter("jiseong");
+			
+			mapper.insert(board);
 	}
 	
 	@Test

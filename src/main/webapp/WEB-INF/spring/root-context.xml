@@ -16,9 +16,21 @@
 		<property name="username" value="book_ex"></property>
 		<property name="password" value="book_ex"></property>
 	</bean>
-
-	<bean id="dataSource" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close">
-		<constructor-arg ref="hikariConfig"/>
+	
+	<bean id="dataSourceSpied" class="com.zaxxer.hikari.HikariDataSource" destroy-method="close"> 
+		<property name="driverClassName" value="oracle.jdbc.driver.OracleDriver" />
+        <property name="jdbcUrl" value="jdbc:oracle:thin:@localhost:1521:XE" />
+        <property name="username" value="book_ex"/>
+        <property name="password" value="book_ex" /> 
+	</bean> 
+	<bean id="dataSource" class="net.sf.log4jdbc.Log4jdbcProxyDataSource"> 
+	    <constructor-arg ref="dataSourceSpied" /> 
+	    <property name="logFormatter"> 
+	        <bean class="net.sf.log4jdbc.tools.Log4JdbcCustomFormatter"> 
+	            <property name="loggingType" value="MULTI_LINE" /> 
+	            <property name="sqlPrefix" value="SQL : "/> 
+	        </bean> 
+	    </property> 
 	</bean>
 	
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">

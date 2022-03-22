@@ -9,5 +9,7 @@
 <body>
 <h1>error_page</h1>
 error_page 입니다
+
+${exception }
 </body>
 </html>

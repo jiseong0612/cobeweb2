@@ -3,8 +3,11 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@	taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ include file="../includes/header.jsp"%>
+<%@ include file="../reply/replyJS.jsp" %>
 <script>
 $(document).ready(function(){
+	var bnoValue = $('#bno').val();
+	
 	$('.listBtn').click(function(e){
 		e.preventDefault();
 		$('#bno').remove();
@@ -15,6 +18,73 @@ $(document).ready(function(){
 		e.preventDefault();
 		$('#hddnForm').attr('action', '/board/modify').submit();
 	});
+	
+ 	//댓글 목록 조회
+	replyService.getList(
+		//reply json
+		{bno : bnoValue, page : 1},
+		//callback func
+		function(list){
+			list.forEach(li =>console.log(li));
+		}
+	);
+ 	
+	//등록
+	/* replyService.add(
+		//reply json
+		{reply : 'JS test', replyer : 'tester', bno :bnoValue},
+		//callback func
+		function(result){
+			alert('result ' + result);
+		}
+	); */
+	
+	//댓글 1개 조회
+/* 	replyService.get(
+		24,
+		//callback func
+		function(data){
+			console.log(data);
+		},
+		//error func
+		function(err){
+			alert('ERROR..');
+		},
+	); */
+	
+	//삭제
+/* 	replyService.remove(
+		//삭제할 댓글 번호
+		10,
+		//callback func
+		function(count){
+			console.log(count);
+			if(count === 'success'){
+				alert('REMOVED');
+			}
+		},
+		//error func
+		function(err){
+			alert('ERROR..');
+		}
+	);*/
+	 
+	 //수정
+/* 	replyService.update(
+		{rno : 11, reply : 'sara i miss you', replyer : 'rocky'},
+		//callback func
+		function(count){
+			console.log(count);
+			if(count === 'success'){
+				alert('update');
+			}
+		},
+		//error func
+		function(err){
+			alert('ERROR..');
+		},
+	); */
+
 });
 </script>
 <form id="hddnForm" action="/board/list" method="get">

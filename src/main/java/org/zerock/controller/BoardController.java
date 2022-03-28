@@ -15,11 +15,11 @@ import org.zerock.service.BoardService;
 import lombok.RequiredArgsConstructor;
 
 @Controller
-@RequiredArgsConstructor
 @RequestMapping("/board")
+@RequiredArgsConstructor
 public class BoardController {
 	private final BoardService service;
-
+	
 	// 목록
 	@GetMapping("/list")
 	public String list(Criteria cri, Model model) {

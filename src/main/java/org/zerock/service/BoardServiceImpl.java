@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequiredArgsConstructor
 @ToString
 @Slf4j
+@Service
 public class BoardServiceImpl implements BoardService{
 	private final BoardMapper mapper;
 

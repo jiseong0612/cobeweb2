@@ -10,6 +10,7 @@ build/
 .apt_generated
 .classpath
 .factorypath
+.class
 .project
 .settings
 .springBeans

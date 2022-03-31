@@ -8,7 +8,7 @@
 $(document).ready(function(){
 	const BNO_VALUE = $('#bno').val();	//글번호 상수
 	const $modal = $('.modal');
-	
+	let rno;
 	//시간표시 컨트롤
 	var displayTime = function(timeValue){
 		let today = new Date();
@@ -82,23 +82,28 @@ $(document).ready(function(){
 		);
 	}
  	
+	//글목록
 	$('.listBtn').click(function(e){
 		e.preventDefault();
 		$('#bno').remove();
 		$('#hddnForm').submit();
 	});
 	
+	//글수정
 	$('.modBtn').click(function(e){
 		e.preventDefault();
 		$('#hddnForm').attr('action', '/board/modify').submit();
 	});
 	
+	//모달 닫기
+	$("#modalCloseBtn").on("click", function(e){ $('.modal').modal('hide'); });
+	
 	$('#addReplyBtn').on('click', showModal);
  	$('#modalRegisterBtn').on('click', addReply);
-	
+ 	
  	//댓글 상세 조회
  	$('.chat').on('click', 'li', function(){
- 		let rno = $(this).data('rno');	//클릭한 글 번호
+ 		rno = $(this).data('rno');	//클릭한 글 번호
  		replyService.get(
 			rno,
 			//callback func
@@ -119,39 +124,50 @@ $(document).ready(function(){
 		);
 	});
  	
-	//삭제
-/* 	replyService.remove(
-		//삭제할 댓글 번호
-		10,
-		//callback func
-		function(count){
-			console.log(count);
-			if(count === 'success'){
-				alert('REMOVED');
-			}
-		},
-		//error func
-		function(err){
-			alert('ERROR..');
-		}
-	);*/
-	 
-	 //수정
-/* 	replyService.update(
-		{rno : 11, reply : 'sara i miss you', replyer : 'rocky'},
-		//callback func
-		function(count){
-			console.log(count);
-			if(count === 'success'){
-				alert('update');
-			}
-		},
-		//error func
-		function(err){
-			alert('ERROR..');
-		},
-	); */
- 	showList(1);
+ 	//댓글수정
+ 	$('#modalModBtn').on('click', function(){
+ 		console.log(rno);
+ 		let reply = {rno: rno, reply: $('#mreply').val(), replyer: $('#mreplyer').val()};
+ 		replyService.update(
+ 				reply,
+			function(count){
+				console.log(count);
+				if(count === 'success'){
+					alert('update');
+				}
+			},
+			//error func
+			function(err){
+				alert('ERROR..');
+			},
+		);
+ 		//수정 후 모달 닫기
+ 		$('#modalCloseBtn').click();
+ 		showList(1);
+ 	});
+ 	
+ 	//댓글삭제
+ 	$('#modalRemoveBtn').on('click', function(){
+ 		replyService.remove(
+			rno,
+			//callback func
+			function(count){
+				console.log(count);
+				if(count === 'success'){
+					alert('REMOVED');
+				}
+			},
+			//error func
+			function(err){
+				alert('ERROR..');
+			},
+ 		);
+	 	showList(1);
+ 	});
+
+ 	//첫 화면 노출시 댓글목록조회
+	showList(1);
+
 });
 </script>
 <form id="hddnForm" action="/board/list" method="get">

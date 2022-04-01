@@ -29,6 +29,38 @@ $(document).ready(function(){
 		}
 	}
 	
+	//댓글 페이징
+	const showReplyPage = function(replyCnt){
+		let pageNum = 1;
+		let endNum = Math.ceil( pageNum / 10.0) * 10; 	//무지성 10을 만든다.
+		let startNum = endNum - 9;						//무지성 시작페이지 = 1;
+		let prev = startNum != 1;
+		let next = false;
+		
+		if(replyCnt <= endNum * 10){	//19 <= 100
+			endNum = Math.ceil(replyCnt / 10.0);			
+		}
+		if(replyCnt > endNum * 10){		// 19 > 100
+			next = true;
+		}
+		
+		let html = '<ul class="pagination pull-right">';
+		if(prev){
+			html += '<li class="page-item"><a class="page-link" href="'+( startNum - 1 )+'"></a></li>'
+		}
+		for(let i = startNum; i<= endNum; i++){
+			let active = (pageNum == i) ? 'active': '';
+			html += '<li class="page-itme '+active+'"><a class="page-link" href="'+i+'">'+i+'</a></li>';
+		}
+		if(next){
+			html += '<li class="page-item"><a class="page-link" href="'+( endNum + 1 )+'"></a></li>'
+		}
+		
+		html+= '</ul>';
+		
+		$('#replyPaging').html(html);
+	}
+	
 	//댓글 목록 조회
 	const showList = function(page){
 		let replyUL = $('.chat');
@@ -38,15 +70,19 @@ $(document).ready(function(){
 			{bno : BNO_VALUE, page : page || 1},
 			//callback func
 			function(replyCnt, list){
-				console.log(replyCnt);
-				console.log(list);
-				
+				if(page == -1){ //-1이면 마지막 페이지를 다시 호출 새로운 댓글 추가시 맨 마지막 페이지 호출(마지막 댓글 보여주기 위함)
+					let pageNum = Math.ceil(replyCnt / 10.0);
+					showList(pageNum);
+					return;
+				}
 				
 				let html = '';
-				if(list.length === 0){
+				
+				if(list == null || list.length === 0){	//댓글이 없으면 숨김
 					replyUL.html('');
 					return;
 				}
+				
 				for(var i = 0; i<list.length; i++){
 					html += '<li class="left clearfix"  data-rno="'+list[i].rno+'">';
 					html += '	<div>';
@@ -58,6 +94,7 @@ $(document).ready(function(){
 					html += '	</div>';
 					html += '</li>';
 				}
+				showReplyPage(replyCnt);
 				replyUL.html(html);
 			},
 		);
@@ -75,17 +112,22 @@ $(document).ready(function(){
 	
 	//댓글 등록
 	const addReply = function(){
-		let reply = {reply : $('#mreply').val(), replyer :$('#mreplyer').val(), bno :BNO_VALUE};
+		let reply = {
+				reply : $('#mreply').val(), 
+				replyer :$('#mreplyer').val(), 
+				bno :BNO_VALUE
+		};
+		
 		replyService.add(
 			reply,
 			function(result){
 				$modal.find('input').val('');
 				$modal.modal('hide');
-				showList(1); //목록 갱신
+				showList(-1); //목록 갱신 (-1 : 마지막페이지 호출)
 			}
 		);
 	}
- 	
+	
 	//글목록
 	$('.listBtn').click(function(e){
 		e.preventDefault();
@@ -147,7 +189,7 @@ $(document).ready(function(){
 		);
  		//수정 후 모달 닫기
  		$('#modalCloseBtn').click();
- 		showList(1);
+ 		showList(-1);
  	});
  	
  	//댓글삭제
@@ -166,11 +208,11 @@ $(document).ready(function(){
 				alert('ERROR..');
 			},
  		);
-	 	showList(1);
+	 	showList(-1);
  	});
 
  	//첫 화면 노출시 댓글목록조회
-	showList(1);
+	showList(-1);
 
 });
 </script>
@@ -230,6 +272,8 @@ $(document).ready(function(){
 								</div>
 							</li>
 						</ul>
+					<!-- 댓글 페이징영역 -->
+					<div id="replyPaging"></div>
 					</div>
 				</div>
 			

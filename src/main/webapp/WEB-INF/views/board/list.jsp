@@ -42,7 +42,7 @@ $(document).ready(function(){
 		event.preventDefault();
 		
 		let bno = $(this).attr('href');
-		$('#hddnForm').append('<input type="hidden" name="bno" value="'+ bno+'">')
+		$('#bno').val(bno);
 		$('#hddnForm').attr('action', '/board/get').submit();
 	});
 	
@@ -97,9 +97,11 @@ $(document).ready(function(){
 						<option value="C" 	${pageMaker.cri.type == 'C'? 'selected' : ''}>내용</option>
 						<option value="W" 	${pageMaker.cri.type == 'W'? 'selected' : ''}>작성자</option>
 					</select>
-					<input type="hidden" name="pageNum" id="pageNum" value="${pageMaker.cri.pageNum }">
-					<input type="hidden" name="amount" id="amount" value="${pageMaker.cri.amount }">
-					<input type="text"  name="keyword" id="keyword" value="${param.keyword }">
+					
+					<input type="hidden" name="bno" 	id="bno" >
+					<input type="hidden" name="pageNum" id="pageNum" 	value="${pageMaker.cri.pageNum }">
+					<input type="hidden" name="amount" 	id="amount" 	value="${pageMaker.cri.amount }">
+					<input type="text"  name="keyword" 	id="keyword" 	value="${param.keyword }">
 					<button id="searchBtn" class="btn btn-default">Search</button>
 				</form>
 				

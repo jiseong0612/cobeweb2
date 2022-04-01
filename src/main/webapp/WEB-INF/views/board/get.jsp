@@ -28,19 +28,18 @@ $(document).ready(function(){
 			return [yy,'/'+ (mm > 9? '':'0')+ mm + '/' + (dd > 9 ? '':'0') + dd].join('');
 		}
 	}
-	
 	//댓글 페이징
+	var pageNum = 1;
 	const showReplyPage = function(replyCnt){
-		let pageNum = 1;
-		let endNum = Math.ceil( pageNum / 10.0) * 10; 	//무지성 10을 만든다.
-		let startNum = endNum - 9;						//무지성 시작페이지 = 1;
+		let endNum = Math.ceil( pageNum / 10.0) * 10;
+		let startNum = endNum - 9;
 		let prev = startNum != 1;
 		let next = false;
 		
-		if(replyCnt <= endNum * 10){	//19 <= 100
+		if(endNum * 10 >= replyCnt){
 			endNum = Math.ceil(replyCnt / 10.0);			
 		}
-		if(replyCnt > endNum * 10){		// 19 > 100
+		if(endNum * 10  < replyCnt){
 			next = true;
 		}
 		
@@ -63,15 +62,13 @@ $(document).ready(function(){
 	
 	//댓글 목록 조회
 	const showList = function(page){
-		let replyUL = $('.chat');
-		
 		replyService.getList(
 			//reply json
 			{bno : BNO_VALUE, page : page || 1},
 			//callback func
 			function(replyCnt, list){
 				if(page == -1){ //-1이면 마지막 페이지를 다시 호출 새로운 댓글 추가시 맨 마지막 페이지 호출(마지막 댓글 보여주기 위함)
-					let pageNum = Math.ceil(replyCnt / 10.0);
+					pageNum = Math.ceil(replyCnt / 10.0);
 					showList(pageNum);
 					return;
 				}
@@ -94,10 +91,12 @@ $(document).ready(function(){
 					html += '	</div>';
 					html += '</li>';
 				}
+				$('.chat').html(html);
 				showReplyPage(replyCnt);
-				replyUL.html(html);
 			},
 		);
+		
+		
 	};
 	
 	//댓글모달 노출
@@ -189,7 +188,7 @@ $(document).ready(function(){
 		);
  		//수정 후 모달 닫기
  		$('#modalCloseBtn').click();
- 		showList(-1);
+ 		showList(pageNum);
  	});
  	
  	//댓글삭제
@@ -197,23 +196,28 @@ $(document).ready(function(){
  		replyService.remove(
 			rno,
 			//callback func
-			function(count){
-				console.log(count);
-				if(count === 'success'){
-					alert('REMOVED');
-				}
+			function(result){
+				alert(result);
+				$('#myModal').modal('hide');
+				showList(pageNum);
 			},
 			//error func
 			function(err){
 				alert('ERROR..');
 			},
  		);
-	 	showList(-1);
+	 	
  	});
 
+ 	$('#replyPaging').on('click','li a',function(e){
+ 		e.preventDefault();
+ 		let replyPageNum = $(this).attr('href');
+ 		pageNum = replyPageNum;
+ 		showList(replyPageNum);
+ 	});
+ 	
  	//첫 화면 노출시 댓글목록조회
 	showList(-1);
-
 });
 </script>
 <form id="hddnForm" action="/board/list" method="get">
@@ -293,7 +297,7 @@ $(document).ready(function(){
 			<div class="modal-body">
 				<div class="form-group">
 			    	<label>Reply</label> 
-			    	<input class="form-control" name='reply' id="mreply" value='New Reply!!!!'>
+			    	<input class="form-control" autofocus="autofocus" name='reply' id="mreply" value='New Reply!!!!'>
 			  	</div>      
 				<div class="form-group">
 				  <label>Replyer</label> 

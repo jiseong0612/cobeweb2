@@ -52,8 +52,6 @@
 				type : 'delete',
 				url  : '/replies/'+rno,
 				success : function(data){
-					console.log('break.....');
-					alert(data);
 					if(callback){
 						callback(data);
 					}

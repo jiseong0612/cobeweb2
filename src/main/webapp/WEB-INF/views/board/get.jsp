@@ -37,7 +37,11 @@ $(document).ready(function(){
 			//reply json
 			{bno : BNO_VALUE, page : page || 1},
 			//callback func
-			function(list){
+			function(replyCnt, list){
+				console.log(replyCnt);
+				console.log(list);
+				
+				
 				let html = '';
 				if(list.length === 0){
 					replyUL.html('');

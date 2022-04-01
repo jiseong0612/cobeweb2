@@ -21,6 +21,11 @@ public class ReplyMapperTests {
 	private ReplyMapper mapper;
 	
 	@Test
+	public void getCountByBno() {
+		log.info("count = {}", mapper.getCountByBno(23L));
+	}
+	
+	@Test
 	public void replyInsert() {
 		ReplyVO reply = new ReplyVO();
 		reply.setBno(23L);
@@ -52,7 +57,8 @@ public class ReplyMapperTests {
 	
 	@Test
 	public void getListWithPaging() {
-		List<ReplyVO> list = mapper.getListWithPaging(new Criteria(), 23L);
+		List<ReplyVO> list = mapper.getListWithPaging(new Criteria(2, 10), 23L);
+		log.info("list size = {}", list.size());
 		list.forEach(reply -> System.out.println(reply));
 	}
 }

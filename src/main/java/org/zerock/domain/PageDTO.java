@@ -13,6 +13,7 @@ public class PageDTO {
 	private int total;
 	private Criteria cri;
 	
+	//토탈 갯수가 필요한 이유 : 페이지 계산을 위해서!
 	public PageDTO(Criteria cri, int total) {
 		this.cri = cri;
 		this.total = total;

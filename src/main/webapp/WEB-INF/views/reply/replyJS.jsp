@@ -34,7 +34,7 @@
 				dataType : 'json',
 				success : function(data){
 					if(callback){
-						callback(data);
+						callback(data.replyCnt, data.list);
 					}
 				},
 				error : function(xhr, status, err){

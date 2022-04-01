@@ -8,6 +8,13 @@
 		values(seq_reply.nextval, #{bno}, #{reply}, #{replyer})
 	</insert>
 	
+	<select id="getCountByBno" resultType="int">
+		select count(rno) 
+		from tbl_reply 
+		where
+			bno = #{bno}
+	</select>
+	
 	<select id="read" resultType="org.zerock.domain.ReplyVO">
 		select * from tbl_reply where rno = #{rno}
 	</select>
@@ -27,7 +34,15 @@
 	</update>
 	
 	<select id="getListWithPaging" resultType="org.zerock.domain.ReplyVO">
-		select * from tbl_reply where bno =#{bno} order by rno asc
+		select * from (
+			select /*+ index(tbl_reply idx_reply)*/ rownum rn, rno, bno, reply, replyer, replydate, updatedate
+			from tbl_reply
+			where
+			bno = #{bno}
+			and 0 <![CDATA[ < ]]>  rno 
+			and (rownum <![CDATA[ <=  ]]> #{cri.pageNum} * #{cri.amount})
+		)
+		where ( #{cri.pageNum} - 1)* #{cri.amount} <![CDATA[ < ]]>  rn 
 	</select>
 	
 </mapper>

@@ -81,7 +81,7 @@ $(document).ready(function(){
 						<c:forEach items="${list }" var="board">
 							<tr class="odd gradeX">
 								<td>${board.bno }</td>
-								<td><a class="bno" href='<c:out value="${board.bno }"/>'>${board.title }</a></td>
+								<td><a class="bno" href='<c:out value="${board.bno }"/>'>${board.title } <b>[<c:out value="${board.replyCnt }"/>]</b></a></td>
 								<td>${board.writer }</td>
 								<td><fmt:formatDate value="${board.regdate }" pattern="yyyy-MM-dd"/></td>
 								<td><fmt:formatDate value="${board.updateDate }" pattern="yyyy-MM-dd"/></td>

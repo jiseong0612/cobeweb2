@@ -19,6 +19,15 @@
 			</trim>
 	</sql>
 	
+	<update id="updateReplyCnt">
+		update 
+			tbl_board 
+		set 
+			replyCnt = replyCnt + #{amount} 
+		where 
+			bno = #{bno}
+	</update>
+	
 	<select id="getList" resultType="org.zerock.domain.BoardVO">
 		select * from tbl_board order by bno desc
 	</select>
@@ -43,6 +52,7 @@
 					, writer
 					, regdate
 					, updateDate
+					, replyCnt
 				from tbl_board
 				where 
 		<include refid="criteria"></include>

@@ -58,7 +58,7 @@ public class BoardMapperTests {
 	
 	@Test
 	public void read() {
-		long bno = 1L;
+		long bno = 23L;
 		BoardVO board = mapper.read(bno);
 		
 		System.out.println(">>> "+board);

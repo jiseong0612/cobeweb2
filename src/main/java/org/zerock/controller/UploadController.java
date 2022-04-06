@@ -2,13 +2,18 @@ package org.zerock.controller;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -21,6 +26,8 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
+
+import net.coobird.thumbnailator.Thumbnailator;
 
 @Controller
 @RequestMapping("/upload")
@@ -68,12 +75,46 @@ public class UploadController {
 	@PostMapping("/uploadAjaxAction")
 	public ResponseEntity<String> uploadAjaxAction(MultipartFile[] uploadFile) throws IllegalStateException, IOException {
 		String uploadFolder = "c:\\upload";
+		File uploadPath = new File(uploadFolder, getFolder());
+		
+		if(!uploadPath.exists()) {
+			uploadPath.mkdirs();
+		}
+		
 		for(MultipartFile file :uploadFile) {
 			String uploadFileName = file.getOriginalFilename();
-			
-			File saveFile = new File(uploadFolder, uploadFileName);
+			UUID uuid = UUID.randomUUID();
+			uploadFileName = uuid.toString()+"_"+uploadFileName;
+			File saveFile = new File(uploadPath, uploadFileName);
+			//try catch...
 			file.transferTo(saveFile);
+			
+			if(checkImageType(saveFile)) {
+				FileOutputStream fos = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
+				Thumbnailator.createThumbnail(file.getInputStream(), fos, 100, 100);
+				fos.close();
+			}
 		}
 		return new ResponseEntity<>("success", HttpStatus.OK);
+	}
+	
+	//이미지 파일인지 검사
+	public boolean checkImageType(File file) {
+		System.out.println(file.toPath());
+		try {
+			String contentType = Files.probeContentType(file.toPath());
+			return contentType.startsWith("image");
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return false;
+	}
+	
+	//날짜별 경로 생성
+	public String getFolder() {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+		Date date = new Date();
+		String str = sdf.format(date);
+		return str.replace("-", File.separator);
 	}
 }

@@ -17,8 +17,8 @@
 	$.ajax({
 		type : "post",
 		url :"/upload/testAjax",
-		contentType : 'application/json',
-		data : json,
+		//contentType : 'application/json',
+		data : JSON.stringify(json),
 		success : function(result){
 			console.log("success..........");
 			console.log("1", result);

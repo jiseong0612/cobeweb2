@@ -20,6 +20,17 @@ const checkExtension = function(fileName, fileSize){
 	}
 	return true;
 }
+const showUploadedFile = function(uploadResultArr){
+	var html = '';
+	$(uploadResultArr).each(function(i, obj){
+		var lastIndexOfUnderBar = obj.fileName.lastIndexOf('_');
+		var realName = obj.fileName.slice(lastIndexOfUnderBar + 1, obj.fileName.length);
+		console.log(realName);
+		html += '<li>' + realName + '</li>';
+	});
+	
+	$('.uploadResult ul').append(html);
+}
 
 $(document).ready(function(){
 	$('#uploadBtn').click(function(){
@@ -33,15 +44,22 @@ $(document).ready(function(){
 			}
 			formData.append('uploadFile',  files[i]);
 		}
-		
+				var cloneObj = $('.uploadDiv').clone();
 		$.ajax({
 			type : 'post',
 			url : '/upload/uploadAjaxAction',
 			data : formData,
+			//dataType : 'json',
 			contentType : false,
 			processData : false,
 			success : function(result){
-				console.log(result);
+				console.log("ajax result >>> ", result);
+				
+				showUploadedFile(result);
+				
+				$('input[name=uploadFile]').val('');
+				
+				
 			},
 			error(xhr,status, eror){
 				console.log(xhr);
@@ -54,6 +72,10 @@ $(document).ready(function(){
 <body>
 <div class="uploadDiv">
 	<input type="file" name="uploadFile" multiple>
+</div>
+<div class="uploadResult">
+	<ul>
+	</ul>
 </div>
 <button type="button" id="uploadBtn">submit!</button>
 </body>

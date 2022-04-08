@@ -5,6 +5,28 @@
 <head>
 <meta charset="UTF-8">
 <title>Insert title here</title>
+<style>
+	.uploadResult{
+		width : 100%;
+		background-color : gray;
+	}
+	
+	.uploadResult ul{
+		display: flex;
+		flex-flow: row;
+		justify-content: center;
+		align-items: center;
+	}
+	
+	.uploadResult ul li{
+		list-style: none;
+		padding: 10px;
+	}
+	
+	.uploadResult ul li img{
+		width: 20px;
+	}
+</style>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script>
 const checkExtension = function(fileName, fileSize){
@@ -25,8 +47,11 @@ const showUploadedFile = function(uploadResultArr){
 	$(uploadResultArr).each(function(i, obj){
 		var lastIndexOfUnderBar = obj.fileName.lastIndexOf('_');
 		var realName = obj.fileName.slice(lastIndexOfUnderBar + 1, obj.fileName.length);
-		console.log(realName);
-		html += '<li>' + realName + '</li>';
+		if(!obj.image){
+			html += '<li><img src="/resources/img/attachFile.jpg">' + realName + '</li>';
+		}else{
+			html += '<li>' + realName + '</li>';
+		}
 	});
 	
 	$('.uploadResult ul').append(html);
@@ -49,7 +74,7 @@ $(document).ready(function(){
 			type : 'post',
 			url : '/upload/uploadAjaxAction',
 			data : formData,
-			//dataType : 'json',
+			dataType : 'json',
 			contentType : false,
 			processData : false,
 			success : function(result){

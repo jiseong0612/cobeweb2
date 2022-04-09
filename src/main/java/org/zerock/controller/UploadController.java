@@ -15,10 +15,12 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,10 +28,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.domain.AttachFileDTO;
 
+import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnailator;
 
 @Controller
 @RequestMapping("/upload")
+@Slf4j
 public class UploadController {
 	@GetMapping("/aa")
 	public String test() {
@@ -103,6 +107,24 @@ public class UploadController {
 			list.add(attachDto);
 		}
 		return new ResponseEntity<>(list, HttpStatus.OK);
+	}
+	
+	@GetMapping("/display")
+	public ResponseEntity<byte[]> getFile(String fileName){
+		log.info("fileName : {}", fileName);
+		
+		File file = new File("c:\\upload\\" + fileName);
+		log.info("file : {}",file);
+		
+		ResponseEntity<byte[]>result = null;
+		try {
+			HttpHeaders header = new HttpHeaders();
+			header.add("Content-Type", "video/mp4");
+			result =  new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return result;
 	}
 	
 	//이미지 파일인지 검사

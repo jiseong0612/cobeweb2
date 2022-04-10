@@ -15,6 +15,8 @@ import java.util.UUID;
 import javax.servlet.http.HttpServletRequest;
 
 import org.json.simple.JSONObject;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -71,6 +73,7 @@ public class UploadController {
 			System.out.println(file.getContentType());
 			File saveFile = new File(uploadFolder, file.getOriginalFilename());
 			file.transferTo(saveFile);
+			
 		}
 	}
 	
@@ -124,6 +127,24 @@ public class UploadController {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	
+	@GetMapping(value = "/download", produces = MediaType.APPLICATION_OCTET_STREAM_VALUE)
+	@ResponseBody
+	public ResponseEntity<Resource>downloadFile(String fileName) throws IOException{
+		log.info("download File = {}", fileName);
+		Resource resource = new FileSystemResource("c:\\upload\\" + fileName);
+		log.info("resource  = {}", resource);
+		
+		String resourceName = resource.getFilename();
+		String downloadName = resourceName.substring(resourceName.lastIndexOf("_")+1);
+		HttpHeaders headers = new HttpHeaders();
+		try {
+			headers.setContentDispositionFormData("attachment", new String(downloadName.getBytes("UTF-8"),"ISO-8859-1"));
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(resource, headers, HttpStatus.OK);
 	}
 	
 	//이미지 파일인지 검사

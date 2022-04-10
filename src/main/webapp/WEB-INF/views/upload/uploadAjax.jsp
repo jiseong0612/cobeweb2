@@ -42,18 +42,21 @@ const checkExtension = function(fileName, fileSize){
 	}
 	return true;
 }
+
 const showUploadedFile = function(uploadResultArr){
 	var html = '';
 	$(uploadResultArr).each(function(i, obj){
 		if(!obj.image){
-			html += '<li><img src="/resources/img/attachFile.jpg">' + obj.fileName + '</li>';
+			var fileCallPath = encodeURIComponent(obj.uploadPath+"/"+obj.uuid+"_"+obj.fileName);
+			html += '<li><a href="/upload/download?fileName='+fileCallPath+'"><img src="/resources/img/attachFile.jpg">' + obj.fileName + '</a></li>';
 		}else{
 			var fileCallPath = encodeURIComponent(obj.uploadPath+"/s_"+obj.uuid+"_"+obj.fileName);
-			html += '<li><img src="/upload/display?fileName='+fileCallPath+'"></li>';
+			html +='<li><a href="/upload/download?fileName='+fileCallPath+'"><img src="/upload/display?fileName='+fileCallPath+'"></a></li>';
 		}
 	});
 	$('.uploadResult ul').append(html);
 }
+
 
 $(document).ready(function(){
 	$('#uploadBtn').click(function(){

@@ -90,8 +90,7 @@ public class UploadController {
 			AttachFileDTO attachDto = new AttachFileDTO();
 			String uploadFileName = file.getOriginalFilename();
 			UUID uuid = UUID.randomUUID();
-			uploadFileName = uuid.toString()+"_"+uploadFileName;
-			File saveFile = new File(uploadPath, uploadFileName);
+			File saveFile = new File(uploadPath, uuid.toString()+"_"+uploadFileName);
 			//try catch...
 			file.transferTo(saveFile);
 			
@@ -100,7 +99,7 @@ public class UploadController {
 			attachDto.setUploadPath(uploadFolderPath);
 			if(checkImageType(saveFile)) {
 				attachDto.setImage(true);
-				FileOutputStream fos = new FileOutputStream(new File(uploadPath, "s_" + uploadFileName));
+				FileOutputStream fos = new FileOutputStream(new File(uploadPath, "s_" + uuid.toString()+"_"+uploadFileName));
 				Thumbnailator.createThumbnail(file.getInputStream(), fos, 100, 100);
 				fos.close();
 			}
@@ -119,7 +118,7 @@ public class UploadController {
 		ResponseEntity<byte[]>result = null;
 		try {
 			HttpHeaders header = new HttpHeaders();
-			header.add("Content-Type", "video/mp4");
+			header.add("Content-Type", Files.probeContentType(file.toPath()));
 			result =  new ResponseEntity<>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();

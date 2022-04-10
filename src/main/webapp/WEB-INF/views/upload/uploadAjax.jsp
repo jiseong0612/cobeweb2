@@ -45,15 +45,13 @@ const checkExtension = function(fileName, fileSize){
 const showUploadedFile = function(uploadResultArr){
 	var html = '';
 	$(uploadResultArr).each(function(i, obj){
-		var lastIndexOfUnderBar = obj.fileName.lastIndexOf('_');
-		var realName = obj.fileName.slice(lastIndexOfUnderBar + 1, obj.fileName.length);
 		if(!obj.image){
-			html += '<li><img src="/resources/img/attachFile.jpg">' + realName + '</li>';
+			html += '<li><img src="/resources/img/attachFile.jpg">' + obj.fileName + '</li>';
 		}else{
-			html += '<li>' + realName + '</li>';
+			var fileCallPath = encodeURIComponent(obj.uploadPath+"/s_"+obj.uuid+"_"+obj.fileName);
+			html += '<li><img src="/upload/display?fileName='+fileCallPath+'"></li>';
 		}
 	});
-	
 	$('.uploadResult ul').append(html);
 }
 
@@ -78,13 +76,8 @@ $(document).ready(function(){
 			contentType : false,
 			processData : false,
 			success : function(result){
-				console.log("ajax result >>> ", result);
-				
 				showUploadedFile(result);
-				
 				$('input[name=uploadFile]').val('');
-				
-				
 			},
 			error(xhr,status, eror){
 				console.log(xhr);

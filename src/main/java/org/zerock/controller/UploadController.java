@@ -82,12 +82,13 @@ public class UploadController {
 	public ResponseEntity<String> deleteFile(String fileName, String type){
 		File file;
 		try {
+			String decodeUrl = URLDecoder.decode(fileName, "UTF-8");
 			file = new File("c:\\upload\\"+ URLDecoder.decode(fileName, "UTF-8"));
 			file.delete();	//일단 지워
 			
 			if(type.equals("image")) {
 				String largeFileName = file.getAbsolutePath();
-				 largeFileName = file.getAbsolutePath().replace("s_", "");
+				largeFileName = file.getAbsolutePath().replace("s_", "");
 				file = new File(largeFileName);
 				
 				file.delete();

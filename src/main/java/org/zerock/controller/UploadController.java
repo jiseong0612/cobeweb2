@@ -135,6 +135,7 @@ public class UploadController {
 	}
 	
 	@GetMapping("/display")
+	@ResponseBody
 	public ResponseEntity<byte[]> getFile(String fileName){
 		log.info("fileName : {}", fileName);
 		

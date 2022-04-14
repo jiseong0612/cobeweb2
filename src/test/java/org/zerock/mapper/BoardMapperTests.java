@@ -1,5 +1,6 @@
 package org.zerock.mapper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.junit.Test;
@@ -82,4 +83,15 @@ public class BoardMapperTests {
 		System.out.println(">>> "+result);
 	}
 	
+	
+	@Test
+	public void getLists() {
+		int[] bnolist = {11, 12,13};
+		List<Integer> list = new ArrayList<>();
+		list.add(10);
+		list.add(10);
+		list.add(10);
+		String bnolists =  mapper.getLists();
+		System.out.println(bnolists);
+	}
 }

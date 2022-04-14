@@ -1,5 +1,8 @@
 package org.zerock.mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +26,11 @@ public class TimeMapperTests {
 	
 	@Test
 	public void getTime2() {
-		log.info(mapper.getTime2());
+		int[] bnolist = {11, 12,13};
+		List<String> list = new ArrayList<>();
+		list.add("java");
+		list.add("html");
+		list.add("css");
+		log.info(mapper.getTime2(list));
 	}
 }

@@ -1,11 +1,16 @@
 package org.zerock.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
@@ -26,6 +31,20 @@ public class BoardController {
 		model.addAttribute("list", service.getList(cri));
 		model.addAttribute("pageMaker", new PageDTO(cri, service.getTotalCount(cri)));
 		return "board/list";
+	}
+	
+	@GetMapping("/testView")
+	public String testView() {
+		return "testView";
+	}
+	@GetMapping("/test")
+	public void test(@RequestParam String list) {
+		String[] listArr = list.split("/");
+		
+		for(int i = 0 ; i < listArr.length; i++) {
+			BoardVO board = service.get((long)Integer.parseInt(listArr[i]));
+			System.out.println(board);
+		}
 	}
 
 	// 조회

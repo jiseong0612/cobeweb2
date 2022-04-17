@@ -3,8 +3,10 @@ package org.zerock.service;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
+import org.zerock.domain.BoardAttachVO;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
+import org.zerock.mapper.BoardAttachMapper;
 import org.zerock.mapper.BoardMapper;
 
 import lombok.RequiredArgsConstructor;
@@ -17,12 +19,20 @@ import lombok.extern.slf4j.Slf4j;
 @Service
 public class BoardServiceImpl implements BoardService{
 	private final BoardMapper mapper;
+	private final BoardAttachMapper attachMapper;
 
 	@Override
-	public Long register(BoardVO board) {
+	public void register(BoardVO board) {
 		mapper.insertSelectKey(board);
 		
-		return board.getBno();
+		if(board.getAttachList() == null || board.getAttachList().size() <= 0) {
+			return;
+		}
+		
+		board.getAttachList().forEach(attach ->{
+			attach.setBno(board.getBno());
+			attachMapper.insert(attach);
+		});
 	}
 
 	@Override
@@ -53,6 +63,12 @@ public class BoardServiceImpl implements BoardService{
 	@Override
 	public int getTotalCount(Criteria cri) {
 		return mapper.getTotalCount(cri);
+	}
+
+	@Override
+	public List<BoardAttachVO> getAttachList(Long bno) {
+		
+		return attachMapper.findByBno(bno);
 	}
 	
 }

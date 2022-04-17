@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,16 +15,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.zerock.domain.BoardAttachVO;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
 import org.zerock.domain.PageDTO;
+import org.zerock.mapper.BoardAttachMapper;
 import org.zerock.service.BoardService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/board")
 @RequiredArgsConstructor
+@Slf4j
 public class BoardController {
 	private final BoardService service;
 	
@@ -63,6 +70,9 @@ public class BoardController {
 	@PostMapping("/register")
 	public String register(BoardVO board, RedirectAttributes rttr) {
 		service.register(board);
+		if(board.getAttachList() != null) {
+			board.getAttachList().forEach(attach -> log.info("attach = {}" ,attach));
+		}
 		rttr.addFlashAttribute("result", board.getBno());
 		return "redirect:/board/list";
 	}
@@ -96,5 +106,10 @@ public class BoardController {
 		rttr.addAttribute("type", cri.getType());
 		rttr.addAttribute("keyword", cri.getKeyword());
 		return "redirect:/board/list";
+	}
+	
+	@GetMapping(value = "/getAttachList", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<List<BoardAttachVO>> getAttachList(Long bno){
+		return new ResponseEntity<List<BoardAttachVO>>(service.getAttachList(bno), HttpStatus.OK);
 	}
 }

@@ -4,8 +4,84 @@
 <%@	taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
 <%@ include file="../includes/header.jsp"%>
 <%@ include file="../reply/replyJS.jsp" %>
+<style>
+.uploadResult {
+	width: 100%;
+	background-color: gray;
+}
+
+.uploadResult ul {
+	display: flex;
+	flex-flow: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.uploadResult ul li {
+	list-style: none;
+	padding: 10px;
+}
+
+.uploadResult ul li img {
+	width: 100px;
+}
+</style>
+
+<style>
+.bigPictureWrapper {
+  position: absolute;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  top:0%;
+  width:100%;
+  height:100%;
+  background-color: gray; 
+  z-index: 100;
+}
+
+.bigPicture {
+  position: relative;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
 <script>
 $(document).ready(function(){
+	(function(){
+		var bno = ${board.bno};
+		$.getJSOn("/board/getAttachList", {bno: bno}, function(arr){
+			var str = '';
+			$(arr).each(function(i, attach){
+				if(attach.fileType){
+					var fileCallPath =  encodeURIComponent( obj.uploadPath+ "/s_"+obj.uuid +"_"+obj.fileName);
+					str += "<li data-path='"+obj.uploadPath+"'";
+					str +=" data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.image+"'"
+					str +" ><div>";
+					str += "<span> "+ obj.fileName+"</span>";
+					str += "<button type='button' data-file=\'"+fileCallPath+"\' "
+					str += "data-type='image' class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+					str += "<img src='/upload/display?fileName="+fileCallPath+"'>";
+					str += "</div>";
+					str +"</li>";
+				}else{
+					var fileCallPath =  encodeURIComponent( obj.uploadPath+"/"+ obj.uuid +"_"+obj.fileName);			      
+				    var fileLink = fileCallPath.replace(new RegExp(/\\/g),"/");
+				      
+					str += "<li "
+					str += "data-path='"+obj.uploadPath+"' data-uuid='"+obj.uuid+"' data-filename='"+obj.fileName+"' data-type='"+obj.image+"' ><div>";
+					str += "<span> "+ obj.fileName+"</span>";
+					str += "<button type='button' data-file=\'"+fileCallPath+"\' data-type='file' " 
+					str += "class='btn btn-warning btn-circle'><i class='fa fa-times'></i></button><br>";
+					str += "<img src='/resources/img/attachFile.jpg'></a>";
+					str += "</div>";
+					str +"</li>";
+				}
+			});
+		});
+	});
+	
 	const BNO_VALUE = $('#bno').val();	//글번호 상수
 	const $modal = $('.modal');
 	let rno;
@@ -284,6 +360,37 @@ $(document).ready(function(){
 			</div>
 		</div>
 	</div>
+</div>
+<div class="bigPictureWarpper">
+	<div class="bigPicture">
+	</div>
+</div>
+
+<div class="row">
+  <div class="col-lg-12">
+    <div class="panel panel-default">
+
+      <div class="panel-heading">File Attach</div>
+      <!-- /.panel-heading -->
+      <div class="panel-body">
+        <div class="form-group uploadDiv">
+            <input type="file" name='uploadFile' multiple>
+        </div>
+        
+        <div class='uploadResult'> 
+          <ul>
+          
+          </ul>
+        </div>
+        
+        
+      </div>
+      <!--  end panel-body -->
+
+    </div>
+    <!--  end panel-body -->
+  </div>
+  <!-- end panel -->
 </div>
 
 <!-- Modal -->

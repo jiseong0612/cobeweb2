@@ -30,9 +30,6 @@ public class BoardServiceTests {
 		board.setTitle("bb");
 		board.setContent("bbContent");
 		board.setWriter("jiseong");
-		
-		long bno = service.register(board);
-		System.out.println("작성된 글 번호는 ? : "+ bno);
 	}
 	
 	@Test

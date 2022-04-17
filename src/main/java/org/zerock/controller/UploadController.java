@@ -27,6 +27,7 @@ import org.springframework.util.FileCopyUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.zerock.domain.AttachFileDTO;
@@ -45,13 +46,12 @@ public class UploadController {
 	
 	@PostMapping("/testAjax")
 	@ResponseBody
-	public Map<String, String>  testAjax(HttpServletRequest request) throws IOException {
-		JSONObject json = new JSONObject();
-		Map<String, String> map = new HashMap<>();
-		map.put("name", request.getParameter("name"));
-		map.put("age", request.getParameter("age"));
-		json.put("sara123", map);
-        return map;
+	public Map<String, String>  testAjax(@RequestParam Map<String, String> param )throws IOException {
+		String name = param.get("name");
+		String age = param.get("age");
+		System.out.println(name);
+		System.out.println(age);
+        return param;
 
 	}
 	

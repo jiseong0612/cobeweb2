@@ -7,32 +7,38 @@
 <title>Insert title here</title>
 <script src="http://code.jquery.com/jquery-latest.js"></script>
 <script>
-	var json ={
+$(document).ready(function(){
+	var data ={
 			name :"name",
 			age : 18
 	}
-	console.log("obj >> ",json);
-	console.log("stringify >> " ,JSON.stringify(json));
-	console.log("parse >> " ,JSON.parse(JSON.stringify(json)));
-	$.ajax({
-		type : "post",
-		url :"/upload/testAjax",
-		//contentType : 'application/json',
-		data : JSON.stringify(json),
-		success : function(result){
-			console.log("success..........");
-			console.log("1", result);
-			console.log("2", JSON.parse(result));
-		},
-		error : function(xhr, status, ero){
-			console.log(xhr);
-		}
+	
+	$('#buttonBtn').on('click', function(){
+		$.ajax({
+			type : "post",
+			url :"/upload/testAjax",
+			dataType : 'text',
+			data :data,
+			success : function(result){
+				console.log("result >>> ", result);
+				console.log("JSON.parse(result) >>> ", JSON.parse(result));
+			},
+			error : function(xhr, status, ero){
+				console.log(xhr);
+			}
+		});
 	});
+});
 </script>
 </head>
 <body>
 	<h1>AjaxTest</h1>
+{
+	name :"name",
+	age : 18
+}
 
+<button id="buttonBtn">버튼</button>
 
 </body>
 </html>

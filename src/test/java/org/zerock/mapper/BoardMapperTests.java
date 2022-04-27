@@ -23,7 +23,8 @@ public class BoardMapperTests {
 	
 	@Test
 	public void getList() {
-		log.info("list ={}", mapper.getList());
+		//log.info("list ={}", mapper.getList());
+		System.out.println( mapper.getList());
 	}
 	
 	@Test

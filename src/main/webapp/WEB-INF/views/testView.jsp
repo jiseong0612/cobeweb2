@@ -1,11 +1,68 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+<%@ page import="java.util.*" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%
 	String name = "jiseong";
 	String[] nameArr = {"userA", "userB", "userC"};
 	System.out.println(name);
 	pageContext.setAttribute("nameArr", nameArr);	//pageContext 스코프를 열어 담는다.
+	
+	List<Map<String, String>> list = new ArrayList<>();
+	Map<String, String> shMap = new HashMap<>();
+	Map<String, String> ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "서울특별시");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "경기도");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "부산광역시");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "대구광역시");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "인천광역시");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "광주광역시");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "대전광역시");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "울산광역시");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "세종특별자치시");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "강원도");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "충청북도");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "충청남도");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "전라북도");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "전라남도");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "경상북도");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "경상남도");
+	list.add(ADDRESS01);
+	ADDRESS01 = new HashMap<>();
+	ADDRESS01.put("ADDRESS01", "제주특별자치도");
+	list.add(ADDRESS01);
+	pageContext.setAttribute("list", list);	//pageContext 스코프를 열어 담는다.
 %>
 <!DOCTYPE html>
 <html>
@@ -16,19 +73,11 @@
 
 <body>
 	<h2>하이요 ^^</h2>
-	<c:if test="${name eq 'jiseong' }">		<!-- pageContext스코프에 담긴 키값으로 사용. -->
-		yes
-	</c:if>
 	<select>
-		<c:forEach items="${nameArr }" var="name" varStatus="status">
-			<option value="${status.index }">${name }</option>
+		<c:forEach items="${list }" var="list" varStatus="status">
+			<option value="${list.ADDRESS01[3] }" >${list.ADDRESS01[3] } == ${fn:substring(list.ADDRESS01,2,3)}</option>
 		</c:forEach>
 	</select>
-	
-	<c:forEach items="${nameArr }" var="name" varStatus="status">
-		<input type="radio" value="${status.index }" name="nameRD" id="rd_${status.index }" ${status.first == true ? "checked" :""}>
-		<label for="rd_${status.index }">${name }</label>
-	</c:forEach>
 </body>
 </html>
 <!-- 

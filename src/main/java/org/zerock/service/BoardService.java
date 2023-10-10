@@ -16,4 +16,22 @@ public class BoardService {
 	public List<BoardVO>getList(){
 		return boardMapper.getList();
 	}
+	
+	public Long register(BoardVO board) {
+		boardMapper.insertSelectKey(board);
+		
+		return board.getBno();
+	}
+	
+	public BoardVO get(Long bno) {
+		return boardMapper.read(bno);
+	}
+	
+	public int modify(BoardVO board) {
+		return boardMapper.update(board);
+	}
+	
+	public int remove(Long bno) {
+		return boardMapper.delete(bno);
+	}
 }

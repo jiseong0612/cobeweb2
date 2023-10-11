@@ -31,11 +31,7 @@
 					<c:forEach items="${list}" var="board">
 						<tr>
 							<td><c:out value="${board.bno}" /></td>
-							<td>
-								<a class='move' href='<c:out value="${board.bno}"/>'>
-									<c:out value="${board.title}" />
-									<b>[<c:out value="${board.replyCnt }"></c:out>]</b>
-								</a>
+							<td><a href="/board/get?bno=<c:out value='${board.bno}' />"> <c:out value="${board.title}" /></a>
 							</td>
 							<td>
 								<c:out value="${board.writer}" />
@@ -85,24 +81,23 @@
 						</c:if>
 					</ul>
 				</div>
+			</div>
+		</div>
+	</div>
+</div>
 
-				<!-- Modal  추가 -->
-				<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-					aria-labelledby="myModalLabel" aria-hidden="true">
-					<div class="modal-dialog">
-						<div class="modal-content">
-							<div class="modal-header">
-								<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-								<h4 class="modal-title" id="myModalLabel">Modal title</h4>
-							</div>
-							<div class="modal-body">처리가 완료되었습니다.</div>
-							<div class="modal-footer">
-								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-								<button type="button" class="btn btn-primary">Save changes</button>
-							</div>
-						</div>
-					</div>
-				</div>
+<!-- Modal  추가 -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog"
+	aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h4 class="modal-title" id="myModalLabel">Modal title</h4>
+			</div>
+			<div class="modal-body">처리가 완료되었습니다.</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 			</div>
 		</div>
 	</div>
@@ -116,62 +111,72 @@
 </form>
 
 <script>
+var result = '<c:out value="${result}"/>';
+
 var checkModal = function(result) {
 	if (result === '' || history.state)
 		return;
 
-	var bno = parseInt(result);
 
-	if (bno > 0) {
-		$('.modal-body').html('게시글' + bno + ' 번이 등록되었습니다.');
+	if (result === 'success') {
+		$('.modal-body').html('정상적으로 처리되었습니다.');
+	}else if (parseInt(result) > 0) {
+		$('.modal-body').html('게시글' + parseInt(result) + ' 번이 등록되었습니다.');
 	}
 
 	$('#myModal').modal('show');
 };
-	
+
 $(document).ready(function(){
-	var result = '<c:out value="${result}"/>';
-	var actionForm = $('#actionForm');
-	var searchForm = $('#searchForm');
-
 	checkModal(result);
-
+	
 	history.replaceState({}, null, null);
-
+	
 	$('#regBtn').on('click', function() {
 		window.location = '/board/register';
 	});
-	
-	$('.move').on('click', function(e){
-		e.preventDefault();
-		actionForm.append('<input type="hidden" name="bno" value="'+$(this).attr('href')+'">');
-		actionForm.attr('action', '/board/get');
-		actionForm.submit();
-	});
-	
-	
-	$('.paginate_button a').on('click', function(e){
-		e.preventDefault();
-		actionForm.find('input[name="pageNum"]').val($(this).attr('href'));
-		actionForm.submit();
-	});
-	
-	$('#searchForm button').on('click', function(e){
-		e.preventDefault();
-		
-		if(!searchForm.find('option:selected').val()){
-			alert('검색종류를 선택하세요');
-			return false;
-		}
-		
-		if(!searchForm.find('input[name="keyWord"]').val()){
-			alert('키워드를 입력하세요');
-			return false;
-		}
-		
-		searchForm.find('input[name="pageNum"]').val(1);
-		searchForm.submit();
-	});
 });
+
+
+	
+// $(document).ready(function(){
+// 	var actionForm = $('#actionForm');
+// 	var searchForm = $('#searchForm');
+
+// 	checkModal(result);
+
+// 	history.replaceState({}, null, null);
+	
+// 	$('.move').on('click', function(e){
+// 		e.preventDefault();
+// 		actionForm.append('<input type="hidden" name="bno" value="'+$(this).attr('href')+'">');
+// 		actionForm.attr('action', '/board/get');
+// 		actionForm.submit();
+// 	});
+	
+	
+// 	$('.paginate_button a').on('click', function(e){
+// 		e.preventDefault();
+// 		actionForm.find('input[name="pageNum"]').val($(this).attr('href'));
+// 		actionForm.submit();
+// 	});
+	
+// 	$('#searchForm button').on('click', function(e){
+// 		e.preventDefault();
+		
+// 		if(!searchForm.find('option:selected').val()){
+// 			alert('검색종류를 선택하세요');
+// 			return false;
+// 		}
+		
+// 		if(!searchForm.find('input[name="keyWord"]').val()){
+// 			alert('키워드를 입력하세요');
+// 			return false;
+// 		}
+		
+// 		searchForm.find('input[name="pageNum"]').val(1);
+// 		searchForm.submit();
+// 	});
+// });
 </script>
 <%@include file="../includes/footer.jsp"%>

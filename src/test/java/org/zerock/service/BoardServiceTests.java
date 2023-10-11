@@ -16,22 +16,22 @@ public class BoardServiceTests {
 
 	@Autowired
 	private BoardService boardService;
-	
+
 	@Test
 	public void getList() {
 		System.out.println(boardService.getList());
 	}
-	
+
 	@Test
 	public void register() {
 		BoardVO board = new BoardVO();
 		board.setTitle("aaa test");
 		board.setContent("aaa content");
 		board.setWriter("aa writer");
-		
+
 		long bno = boardService.register(board);
-		
-		if(bno > 0) {
+
+		if (bno > 0) {
 			System.out.println("bno : " + board.getBno());
 		}
 	}

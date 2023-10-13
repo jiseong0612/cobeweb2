@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.domain.BoardVO;
+import org.zerock.domain.Criteria;
 import org.zerock.service.BoardService;
 
 import lombok.extern.log4j.Log4j;
@@ -23,8 +24,8 @@ public class BoardController {
 	private BoardService boardService;
 
 	@GetMapping("/list")
-	public String boardList(Model model) {
-		List<BoardVO> boardList = boardService.getList();
+	public String boardList(Criteria cri, Model model) {
+		List<BoardVO> boardList = boardService.getList(cri);
 
 		model.addAttribute("list", boardList);
 		return "board/list";

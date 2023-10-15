@@ -5,6 +5,7 @@ import lombok.Data;
 @Data
 public class Criteria {
 	private int pageNum, amount;
+	private String type, keyword;
 	
 	public Criteria() {
 		this(1, 10);
@@ -14,5 +15,9 @@ public class Criteria {
 		//super(); //Criteria 클래스는 아무런 상속을 받지 않고 독립적인 클래스로 보이며, super() 호출이 필요한 경우가 아닙니다.
 		this.pageNum = pageNum;
 		this.amount = amount;
+	}
+	
+	public String[] getTypeArr() {
+		return type == null? new String[] {} : type.split("");
 	}
 }

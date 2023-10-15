@@ -1,7 +1,9 @@
 package org.zerock.mapper;
 
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -73,6 +75,9 @@ public class BoardMapperTests {
 	@Test
 	public void getListWithPaging() {
 		Criteria cri = new Criteria();
+		
+		cri.setType("TCW");
+		cri.setKeyword("11");
 		List<BoardVO> list = boardMapper.getListWithPaging(cri);
 	}
 	

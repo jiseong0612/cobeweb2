@@ -10,6 +10,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.zerock.domain.BoardVO;
 import org.zerock.domain.Criteria;
+import org.zerock.domain.PageDTO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -74,4 +75,15 @@ public class BoardMapperTests {
 		Criteria cri = new Criteria();
 		List<BoardVO> list = boardMapper.getListWithPaging(cri);
 	}
+	
+	@Test
+	public void testPageDto() {
+		Criteria cri = new Criteria();
+		cri.setPageNum(11);
+		
+		PageDTO dto = new PageDTO(cri, 250);
+		
+		log.info(dto);
+	}
+	
 }

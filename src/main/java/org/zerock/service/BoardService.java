@@ -17,6 +17,10 @@ public class BoardService {
 	public List<BoardVO> getList(Criteria cri) {
 		return boardMapper.getListWithPaging(cri);
 	}
+	
+	public int getTotalCount(Criteria cri) {
+		return boardMapper.getTotalCount(cri);
+	}
 
 	public Long register(BoardVO board) {
 		boardMapper.insertSelectKey(board);

@@ -34,8 +34,8 @@
                     <label>Writer</label>
                     <input class="form-control" name='writer' value='<c:out value="${board.writer }"/>' readonly="readonly">
                 </div>
-                	<a href="/board/list"><button type="submit" data-oper='modify' class="btn btn-default">List</button></a>
-                	<a href="/board/modify?bno=<c:out value="${board.bno }"/>"><button type="submit" data-oper='remove' class="btn btn-default">Modify</button></a>
+                <a href="/board/list" class="listBtn"><button type="submit" class="btn btn-default">List</button></a>
+                <a href="/board/modify?bno=<c:out value="${board.bno }"/>" class="modbtn"><button type="reset" class="btn btn-default">Modify</button></a>
             </div>
         </div>
     </div>
@@ -116,14 +116,36 @@
         </div>
     </div>
 </div>
+
+
+<form id="actionForm" action="/board/list" method="get">
+	<input type="hidden" name="pageNum" value="${cri.pageNum }">
+	<input type="hidden" name="amount" value="${cri.amount }">
+    <input type="hidden" name="bno" value="${board.bno }">
+</form>
+
 <form id="operForm" action="/board/modify" method="get">
     <input type="hidden" id="pageNum" name="pageNum" value='<c:out value="${cri.pageNum }"/>'>
     <input type="hidden" id="amount" name="amount" value='<c:out value="${cri.amount }"/>'>
     <input type="hidden" id="bno" name="bno" value='<c:out value="${board.bno }"/>'>
-    <input type="hidden" name="type" value="${cri.type }">
-    <input type="hidden" name="keyWord" value="${cri.keyWord }">
 </form>
 <script>
+var actionForm = $('#actionForm');
 
+$(document).ready(function(){
+	$('.listBtn').on('click', function(e){
+		e.preventDefault();
+		
+		actionForm.find('input[name="bno"]').remove();
+		actionForm.submit();
+	});
+	
+	$('.modbtn').on('click', function(e){
+		e.preventDefault();
+		
+		actionForm.attr('action', '/board/modify');
+		actionForm.submit();
+	});
+});
 </script>
 <%@include file="../includes/footer.jsp"%>

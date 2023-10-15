@@ -46,25 +46,25 @@
 					</c:forEach>
 				</table>
 				
-<!-- 				<div class="row"> -->
-<!-- 					<div class="col-lg-12"> -->
-<!-- 						<form id="searchForm" action="/board/list" method="get"> -->
-<!-- 							<select name="type"> -->
-<%-- 								<option value="" ${pageMaker.cri.type == null? 'selected' : '' }>--</option> --%>
-<%-- 								<option value="T" ${pageMaker.cri.type == 'T' ? 'selected' : '' }>제목</option> --%>
-<%-- 								<option value="C" ${pageMaker.cri.type == 'C' ? 'selected' : '' }>내용</option> --%>
-<%-- 								<option value="W" ${pageMaker.cri.type == 'W' ? 'selected' : '' }>작성자</option> --%>
-<%-- 								<option value="TC" ${pageMaker.cri.type == 'TC' ? 'selected' : '' }>제목 or 내용</option> --%>
-<%-- 								<option value="TW" ${pageMaker.cri.type == 'TW' ? 'selected' : '' }>제목 or 작성자</option> --%>
-<%-- 								<option value="TCW" ${pageMaker.cri.type == 'TCW' ? 'selected' : '' }>제목 or 내용 or 작성자</option> --%>
-<!-- 							</select>				 -->
-<%-- 							<input type="text" name="keyWord" value="${pageMaker.cri.keyWord }"> --%>
-<%-- 							<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }">		 --%>
-<%-- 							<input type="hidden" name="amount" value="${pageMaker.cri.amount }">		 --%>
-<!-- 							<button class="btn btn-default">Search</button> -->
-<!-- 						</form> -->
-<!-- 					</div> -->
-<!-- 				</div> -->
+				<div class="row">
+					<div class="col-lg-12">
+						<form id="searchForm" action="/board/list" method="get">
+							<select name="type">
+								<option value="" ${pageMaker.cri.type == null? 'selected' : '' }>--</option>
+								<option value="T" ${pageMaker.cri.type == 'T' ? 'selected' : '' }>제목</option>
+								<option value="C" ${pageMaker.cri.type == 'C' ? 'selected' : '' }>내용</option>
+								<option value="W" ${pageMaker.cri.type == 'W' ? 'selected' : '' }>작성자</option>
+								<option value="TC" ${pageMaker.cri.type == 'TC' ? 'selected' : '' }>제목 or 내용</option>
+								<option value="TW" ${pageMaker.cri.type == 'TW' ? 'selected' : '' }>제목 or 작성자</option>
+								<option value="TCW" ${pageMaker.cri.type == 'TCW' ? 'selected' : '' }>제목 or 내용 or 작성자</option>
+							</select>				
+							<input type="text" name="keyword" value="${pageMaker.cri.keyword }">
+							<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }">		
+							<input type="hidden" name="amount" value="${pageMaker.cri.amount }">		
+							<button class="btn btn-default">Search</button>
+						</form>
+					</div>
+				</div>
 				
 				<div class='pull-right'>
 					<ul class="pagination">
@@ -106,8 +106,8 @@
 <form id="actionForm" action="/board/list" method="get">
 	<input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum }">
 	<input type="hidden" name="amount" value="${pageMaker.cri.amount }">
-<%-- 	<input type="hidden" name="type" value="${pageMaker.cri.type }"> --%>
-<%-- 	<input type="hidden" name="keyWord" value="${pageMaker.cri.keyWord }"> --%>
+	<input type="hidden" name="type" value="${pageMaker.cri.type }">
+	<input type="hidden" name="keyword" value="${pageMaker.cri.keyword }">
 </form>
 
 <script>
@@ -157,6 +157,13 @@ $(document).ready(function(){
 		actionForm.append('<input type="hidden" name="bno" value="'+ targetBno+'">')
 		actionForm.attr('action', '/board/get');
 		actionForm.submit();
+	});
+	
+	$('#searchForm button').on('click', function(e){
+		e.preventDefault();
+		
+		$('#searchForm').find('input[name=pageNum]').val(1);
+		$('#searchForm').submit();
 	});
 });
 </script>

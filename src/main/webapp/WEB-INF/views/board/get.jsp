@@ -122,6 +122,8 @@
 	<input type="hidden" name="pageNum" value="${cri.pageNum }">
 	<input type="hidden" name="amount" value="${cri.amount }">
     <input type="hidden" name="bno" value="${board.bno }">
+    <input type="hidden" name="type" value="${cri.type }">
+	<input type="hidden" name="keyword" value="${cri.keyword }">
 </form>
 
 <form id="operForm" action="/board/modify" method="get">
@@ -136,6 +138,7 @@ $(document).ready(function(){
 	$('.listBtn').on('click', function(e){
 		e.preventDefault();
 		
+		actionForm.attr('action', '/board/list');
 		actionForm.find('input[name="bno"]').remove();
 		actionForm.submit();
 	});

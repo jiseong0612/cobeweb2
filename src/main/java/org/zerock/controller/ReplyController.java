@@ -8,7 +8,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,6 +27,11 @@ public class ReplyController {
 
 	@Autowired
 	private ReplyService replyService;
+	@GetMapping(value = "/{rno}", produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<ReplyVO>get(@PathVariable Long rno){
+		ReplyVO reply = replyService.get(rno);
+		return new ResponseEntity<ReplyVO>(reply, HttpStatus.OK);
+	}
 
 	@GetMapping(value = "/pages/{bno}/{pageNum}", produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<List<ReplyVO>> getList(Criteria cri, @PathVariable Long bno) {
@@ -37,7 +41,7 @@ public class ReplyController {
 	}
 	
 	@PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> create(ReplyVO reply) {
+	public ResponseEntity<String> create(@RequestBody ReplyVO reply) {
 		int insertCount = replyService.register(reply);
 
 		return insertCount == 1 

@@ -68,6 +68,7 @@
         <div class="panel panel-default">
             <div class="panel-heading">
                 <i class="fa fa-comments fa-fw"></i> Reply
+                <button id='addReplyBtn' class='btn btn-primary btn-xs pull-right'>New Reply</button>
             </div>
             <div class="panel-body">
                 <ul class="chat">
@@ -89,7 +90,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-    aria-labelledby="myModalLabel" aria-hidden="true">
+    aria-labelledby="myModalLabel" aria-hidden="true" data-rno="">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -104,7 +105,7 @@
                 </div>
                 <div class="form-group">
                     <label>Replyer</label>
-                    <input class="form-control" name='replyer' value='replyer' readonly>
+                    <input class="form-control" name='replyer' value='replyer'>
                 </div>
                 <div class="form-group">
                     <label>Reply Date</label>
@@ -139,6 +140,14 @@
 var actionForm = $('#actionForm');
 var bnoValue = '<c:out value="${board.bno}" />';
 var replyUL = $('.chat');
+var modal = $('.modal');
+var modalInputReply = modal.find('[name=reply]');
+var modalInputReplyer = modal.find('[name=replyer]');
+var modalInputReplyDate = modal.find('[name=replyDate]');
+
+var modalModBtn = $('#modalModBtn');
+var modalRemoveBtn = $('#modalRemoveBtn');
+var modalRegisterBtn = $('#modalRegisterBtn');
 
 var showList = function(page){
 	replyService.getList(
@@ -184,6 +193,76 @@ $(document).ready(function(){
 		actionForm.attr('action', '/board/modify');
 		actionForm.submit();
 	});
+	
+	<%-- 댓글 달기 버튼 동작 --%>
+	$('#addReplyBtn').on('click', function(){
+		modal.find('input').val('');
+		modalInputReplyDate.closest('div').hide();
+		modal.find('button[id != modalCloseBtn]').hide();
+		modalRegisterBtn.show();
+		
+		$('#myModal').modal('show');
+	});
+	
+	<%-- 댓글 추가 --%>
+	$('#modalRegisterBtn').on('click', function(){
+		var reply = {
+			reply : modalInputReply.val()
+			, replyer : modalInputReplyer.val()
+			, bno : bnoValue
+		};
+		
+		replyService.add(reply, function(result){
+			alert(result);
+			modal.find('input').val('');
+			modal.modal('hide');
+			
+			showList(1);
+		});
+	});
+	
+	<%-- 댓글 조회 --%>
+	$('.chat').on('click', 'li', function(){
+		var rno = $(this).data('rno');
+		
+		replyService.get(rno, function(reply){
+			modalInputReply.val(reply.reply);
+			modalInputReplyer.val(reply.replyer);
+			modalInputReplyDate.val(replyService.displayTime(reply.replyDate))
+			.attr('readonly', 'readonly');
+			modal.data('rno', reply.rno);
+			
+			modal.find('button[id != modalCloseBtn]').hide();
+			modalModBtn.show();
+			modalRemoveBtn.show();
+			
+			$('.modal').modal('show');
+		});
+	});
+	
+	<%-- 댓글 수정 --%>
+	$('#modalModBtn').on('click', function(){
+		var reply = {
+			rno : modal.data('rno')
+			, reply : modalInputReply.val()
+		};
+		
+		replyService.update(reply, function(result){
+			alert(result);
+			modal.modal('hide');
+			showList(1);
+		});
+	});
+	
+	<%-- 댓글 삭제 --%>
+	$('#modalRemoveBtn').on('click', function(){
+		replyService.remove(modal.data('rno'),function(result){
+			alert(result);
+			modal.modal('hide');
+			showList(1);
+		});
+	});
+	
 });
 </script>
 <%@include file="../includes/footer.jsp"%>

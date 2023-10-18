@@ -57,6 +57,7 @@
 					if(callback)callback(result);
 				},
 				error : function(xhr, status, er){
+					console.log('error');
 					if(error)error(er);
 				}
 			});
@@ -90,7 +91,7 @@
 				var ss = dateObj.getSeconds();
 				
 				//0을 더하는 이유는 7시인경우 07시로 표현하기 위함
-				return [ (hh > 9 ? '' : '0') + hh, ':', (mi > 9 ? '' : '0') + mi,
+				return [ (hh > 9 ? '' : '0') + hh, ':', (mm > 9 ? '' : '0') + mm,
 					':', (ss > 9 ? '' : '0') + ss ].join('');
 			}else {
 				var yy = dateObj.getFullYear();

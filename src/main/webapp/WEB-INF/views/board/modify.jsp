@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@include file="../includes/header.jsp"%>
+<script src="../../resources/summernote/summernote-lite.min.js"></script>
 
 <div class="row">
     <div class="col-lg-12">
@@ -30,7 +31,7 @@
                     </div>
                     <div class="form-group">
                         <label>Text area</label>
-                        <textarea class="form-control" rows="3" name='content'><c:out value="${board.content}" /></textarea>
+                        <textarea class="form-control" rows="3" name='content' id="summernote"><c:out value="${board.content}" /></textarea>
                     </div>
                     <div class="form-group">
                         <label>Writer</label>
@@ -67,6 +68,10 @@
 var formObj = $('form'); 
 
 $(document).ready(function(){
+	$('#summernote').summernote({
+		focus : true
+	});
+	
     $('.btn').on('click', function(e){
     	e.preventDefault();
     	

@@ -4,6 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@include file="../includes/header.jsp"%>
 <%@include file="replyService.jsp" %>
+<script src="../../resources/summernote/summernote-lite.min.js"></script>
 
 <div class="row">
     <div class="col-lg-12">
@@ -27,8 +28,10 @@
                 </div>
 
                 <div class="form-group">
-                    <label>Text area</label>
-                    <textarea class="form-control" rows="3" name='content' readonly="readonly"><c:out value="${board.content}" /></textarea>
+                    <label>content</label>
+                    <div id="summernote" style="padding: 6px 12px 6px 12px;background-color: #eee; opacity: 1; border: 1px solid #ccc;border-radius: 4px;">
+                    	${board.content}
+                    </div>
                 </div>
 
                 <div class="form-group">
@@ -64,7 +67,7 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-comments fa-fw"></i> Reply1232
+                <i class="fa fa-comments fa-fw"></i> Reply
             </div>
             <div class="panel-body">
                 <ul class="chat">
@@ -135,8 +138,38 @@
 <script>
 var actionForm = $('#actionForm');
 var bnoValue = '<c:out value="${board.bno}" />';
+var replyUL = $('.chat');
 
+var showList = function(page){
+	replyService.getList(
+		{bno : bnoValue, pageNum : '${cri.pageNum}'},
+		function(list){
+			var str = '';
+			if(list == null || list.length === 0){
+				replyUL.html('첫 댓글의 주인공이 되세요!');
+			}else{
+				for(var i = 0; i < list.length; i++){
+				    str += '<li class="left  clearfix" data-rno="'+list[i].rno+'">';
+				    str += '<div>';
+				    str += '	<div class="header">';
+				    str += '		<strong class="primary-font">'+list[i].replyer+'</strong>';
+				    str += '		<small class="pull-right text-muted">'+replyService.displayTime(list[i].replyDate)+'</small>';
+				    str += '	</div>';
+				    str += '	<p>'+list[i].reply+'</p>';
+				    str += '</div>';
+				    str += '</li>';
+				}
+				replyUL.html(str);
+			}
+		}
+	)
+}
+var pageInit = function(){
+	showList(1);
+};
 $(document).ready(function(){
+	pageInit();
+	
 	$('.listBtn').on('click', function(e){
 		e.preventDefault();
 		

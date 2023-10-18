@@ -31,7 +31,7 @@
 					<c:forEach items="${list}" var="board">
 						<tr>
 							<td><c:out value="${board.bno}" /></td>
-							<td><a class="move" href="<c:out value='${board.bno}' />"> <c:out value="${board.title}" /></a>
+							<td><a class="move" href="<c:out value='${board.bno}' />"> ${board.title}</a>
 							</td>
 							<td>
 								<c:out value="${board.writer}" />
@@ -129,6 +129,16 @@ var checkModal = function(result) {
 	}
 
 	$('#myModal').modal('show');
+};
+
+var getListPage = function(){
+	$.ajax({
+		type :'get',
+		url :'/board/listJson.json',
+		success : function(list){
+			console.log(list);
+		}
+	});
 };
 
 $(document).ready(function(){

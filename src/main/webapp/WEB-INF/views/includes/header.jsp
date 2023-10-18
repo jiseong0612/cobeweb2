@@ -10,6 +10,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="description" content="">
 <meta name="author" content="">
+<link rel="stylesheet" href="/resources/summernote/summernote-lite.css" >
 
 <title>SB Admin 2 - Bootstrap Admin Theme</title>
 

@@ -3,6 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@include file="../includes/header.jsp"%>
+<script src="../../resources/summernote/summernote-lite.min.js"></script>
 
 <div class="row">
 	<div class="col-lg-12">
@@ -25,7 +26,7 @@
 
 					<div class="form-group">
 						<label>Text area</label>
-						<textarea class="form-control" rows="3" name='content'></textarea>
+						<textarea class="form-control" rows="3" name='content' id="summernote"></textarea>
 					</div>
 
 					<div class="form-group">
@@ -122,7 +123,12 @@
 // 	return true;
 // };
 
-// $(document).ready(function(){
+$(document).ready(function(){
+	$('#summernote').summernote({
+		codeviewFilter: false,
+		codeviewIframeFilter: true,
+		focus : true
+	});
 // 	var formObj = $('form[role="form"]');
 	
 // 	$('button[type="submit"]').on('click', function(e){
@@ -213,6 +219,6 @@
 // 		});
 // 	});
 	
-// });
+});
 </script>
 <%@include file="../includes/footer.jsp"%>

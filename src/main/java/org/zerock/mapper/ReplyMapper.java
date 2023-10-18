@@ -24,7 +24,7 @@ public interface ReplyMapper {
 
 	int delete(Long rno);
 
-	int getTotalCount(Criteria cri);
+	int getCountByBno(Long bno);
 
 	List<ReplyVO> searchTest(Map<String, Map<String, String>> outer);
 }

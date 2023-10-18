@@ -25,8 +25,8 @@
 			$.ajax({
 				type : 'get',
 				url : '/replies/pages/'+bno+'/'+pageNum,
-				success : function(result){
-					if(callback)callback(result);
+				success : function(data){
+					if(callback)callback(data.replyCnt, data.list);
 				},
 				error : function(xhr, status, er){
 					if(error)error(er);

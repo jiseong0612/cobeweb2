@@ -3,8 +3,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@include file="../includes/header.jsp"%>
-<%@include file="replyService.jsp" %>
-<script src="../../resources/summernote/summernote-lite.min.js"></script>
+<%@include file="replyService.jsp"%>
 
 <div class="row">
     <div class="col-lg-12">
@@ -28,18 +27,16 @@
                 </div>
 
                 <div class="form-group">
-                    <label>content</label>
-                    <div id="summernote" style="padding: 6px 12px 6px 12px;background-color: #eee; opacity: 1; border: 1px solid #ccc;border-radius: 4px;">
-                    	${board.content}
-                    </div>
+                    <label>Text area</label>
+                    <textarea class="form-control" rows="3" name='content' readonly="readonly"><c:out value="${board.content}" /></textarea>
                 </div>
 
                 <div class="form-group">
                     <label>Writer</label>
                     <input class="form-control" name='writer' value='<c:out value="${board.writer }"/>' readonly="readonly">
                 </div>
-                <a href="/board/list" class="listBtn"><button type="submit" class="btn btn-default">List</button></a>
-                <a href="/board/modify?bno=<c:out value="${board.bno }"/>" class="modbtn"><button type="reset" class="btn btn-default">Modify</button></a>
+		                <button data-oper='modify' class="btn btn-default">Modify</button>
+                <button data-oper='list' class="btn btn-info">List</button>
             </div>
         </div>
     </div>
@@ -67,8 +64,8 @@
     <div class="col-lg-12">
         <div class="panel panel-default">
             <div class="panel-heading">
-                <i class="fa fa-comments fa-fw"></i> Reply
-                <button id='addReplyBtn' class='btn btn-primary btn-xs pull-right'>New Reply</button>
+                <i class="fa fa-comments fa-fw"></i> Reply1232
+	                <button id='addReplyBtn' class='btn btn-primary btn-xs pull-right'>New Reply</button>
             </div>
             <div class="panel-body">
                 <ul class="chat">
@@ -90,7 +87,7 @@
 
 <!-- Modal -->
 <div class="modal fade" id="myModal" tabindex="-1" role="dialog"
-    aria-labelledby="myModalLabel" aria-hidden="true" data-rno="">
+    aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
@@ -105,7 +102,7 @@
                 </div>
                 <div class="form-group">
                     <label>Replyer</label>
-                    <input class="form-control" name='replyer' value='replyer'>
+                    <input class="form-control" name='replyer' value='replyer' readonly>
                 </div>
                 <div class="form-group">
                     <label>Reply Date</label>
@@ -121,148 +118,344 @@
         </div>
     </div>
 </div>
-
-
-<form id="actionForm" action="/board/list" method="get">
-	<input type="hidden" name="pageNum" value="${cri.pageNum }">
-	<input type="hidden" name="amount" value="${cri.amount }">
-    <input type="hidden" name="bno" value="${board.bno }">
-    <input type="hidden" name="type" value="${cri.type }">
-	<input type="hidden" name="keyword" value="${cri.keyword }">
-</form>
-
 <form id="operForm" action="/board/modify" method="get">
     <input type="hidden" id="pageNum" name="pageNum" value='<c:out value="${cri.pageNum }"/>'>
     <input type="hidden" id="amount" name="amount" value='<c:out value="${cri.amount }"/>'>
     <input type="hidden" id="bno" name="bno" value='<c:out value="${board.bno }"/>'>
+    <input type="hidden" name="type" value="${cri.type }">
+    <input type="hidden" name="keyword" value="${cri.keyword }">
 </form>
 <script>
-var actionForm = $('#actionForm');
-var bnoValue = '<c:out value="${board.bno}" />';
+
+var operForm = $('#operForm');
+var bnoValue = '<c:out value="${board.bno}"/>';
 var replyUL = $('.chat');
 var modal = $('.modal');
-var modalInputReply = modal.find('[name=reply]');
-var modalInputReplyer = modal.find('[name=replyer]');
-var modalInputReplyDate = modal.find('[name=replyDate]');
+var modalInputReply = modal.find('input[name="reply"]');
+var modalInputReplyer = modal.find('input[name="replyer"]');
+var modalInputReplyDate = modal.find('input[name="replyDate"]');
 
 var modalModBtn = $('#modalModBtn');
 var modalRemoveBtn = $('#modalRemoveBtn');
 var modalRegisterBtn = $('#modalRegisterBtn');
 
-var showList = function(page){
-	replyService.getList(
-		{bno : bnoValue, pageNum : '${cri.pageNum}'},
-		function(list){
-			var str = '';
-			if(list == null || list.length === 0){
-				replyUL.html('첫 댓글의 주인공이 되세요!');
-			}else{
-				for(var i = 0; i < list.length; i++){
-				    str += '<li class="left  clearfix" data-rno="'+list[i].rno+'">';
-				    str += '<div>';
-				    str += '	<div class="header">';
-				    str += '		<strong class="primary-font">'+list[i].replyer+'</strong>';
-				    str += '		<small class="pull-right text-muted">'+replyService.displayTime(list[i].replyDate)+'</small>';
-				    str += '	</div>';
-				    str += '	<p>'+list[i].reply+'</p>';
-				    str += '</div>';
-				    str += '</li>';
-				}
-				replyUL.html(str);
-			}
-		}
-	)
-}
-var pageInit = function(){
-	showList(1);
-};
-$(document).ready(function(){
-	pageInit();
-	
-	$('.listBtn').on('click', function(e){
-		e.preventDefault();
-		
-		actionForm.attr('action', '/board/list');
-		actionForm.find('input[name="bno"]').remove();
-		actionForm.submit();
-	});
-	
-	$('.modbtn').on('click', function(e){
-		e.preventDefault();
-		
-		actionForm.attr('action', '/board/modify');
-		actionForm.submit();
-	});
-	
-	<%-- 댓글 달기 버튼 동작 --%>
-	$('#addReplyBtn').on('click', function(){
-		modal.find('input').val('');
-		modalInputReplyDate.closest('div').hide();
-		modal.find('button[id != modalCloseBtn]').hide();
-		modalRegisterBtn.show();
-		
-		$('#myModal').modal('show');
-	});
-	
-	<%-- 댓글 추가 --%>
-	$('#modalRegisterBtn').on('click', function(){
-		var reply = {
-			reply : modalInputReply.val()
-			, replyer : modalInputReplyer.val()
-			, bno : bnoValue
-		};
-		
-		replyService.add(reply, function(result){
-			alert(result);
-			modal.find('input').val('');
-			modal.modal('hide');
-			
-			showList(1);
-		});
-	});
-	
-	<%-- 댓글 조회 --%>
-	$('.chat').on('click', 'li', function(){
-		var rno = $(this).data('rno');
-		
-		replyService.get(rno, function(reply){
-			modalInputReply.val(reply.reply);
-			modalInputReplyer.val(reply.replyer);
-			modalInputReplyDate.val(replyService.displayTime(reply.replyDate))
-			.attr('readonly', 'readonly');
-			modal.data('rno', reply.rno);
-			
-			modal.find('button[id != modalCloseBtn]').hide();
-			modalModBtn.show();
-			modalRemoveBtn.show();
-			
-			$('.modal').modal('show');
-		});
-	});
-	
-	<%-- 댓글 수정 --%>
-	$('#modalModBtn').on('click', function(){
-		var reply = {
-			rno : modal.data('rno')
-			, reply : modalInputReply.val()
-		};
-		
-		replyService.update(reply, function(result){
-			alert(result);
-			modal.modal('hide');
-			showList(1);
-		});
-	});
-	
-	<%-- 댓글 삭제 --%>
-	$('#modalRemoveBtn').on('click', function(){
-		replyService.remove(modal.data('rno'),function(result){
-			alert(result);
-			modal.modal('hide');
-			showList(1);
-		});
-	});
-	
-});
+var replyer = null;
+
+var pageNum = 1;
+var replyPageFooter = $('.panel-footer');
+    $(document).ready(function() {
+
+        showList(1);
+
+        $.getJSON("/board/getAttachList", {bno : bnoValue},
+            function(arr){
+                var str = '';
+
+                $(arr).each(function(i, attach){
+                    if(attach.fileType){
+                        var fileCallPath = encodeURIComponent(attach.uploadPath + '/s_' + attach.uuid + '_' + attach.fileName);
+                        str += '<li data-path="'+attach.uploadPath+'" data-uuid="'+attach.uuid+'" data-filename="'+attach.fileName+'" data-type="'+attach.fileType+'">';
+                        str += '    <div>';
+                        str += '        <img src="/display?fileName='+fileCallPath+'">';
+                        str += '    </div>';
+                        str += '</li>';
+                    }else{
+                        str += '<li data-path="'+attach.uploadPath+'" data-uuid="'+attach.uuid+'" data-filename="'+attach.fileName+'" data-type="'+attach.fileType+'">';
+                        str += '    <div>';
+                        str += '        <span>'+attach.fileName+'</span></br>';
+                        str += '        <img src="/resources/img/attach.jpg">';
+                        str += '    </div>';
+                        str += '</li>';
+                    }
+                });
+
+                $('.uploadResult ul').html(str);
+            }
+        );
+
+        $('.uploadResult').on('click', 'li', function(){
+            var liObj = $(this);
+
+            var path = encodeURIComponent(liObj.data('path')+'/'+liObj.data('uuid')+'_'+liObj.data('filename'));
+
+            if(liObj.data('type')){
+                showImage(path.replace(new RegExp(/\\/g),'/'));
+            }else{
+                window.location ='/download?fileName='+path;
+            }
+        });
+
+        $('button[data-oper="modify"]').on('click', function(){
+            operForm.submit();
+        });
+
+        $('button[data-oper="list"]').on('click', function(){
+            operForm.find('#bno').remove();
+            operForm.attr('action', '/board/list');
+            operForm.submit();
+        });
+
+        $('#addReplyBtn').on('click', function(){
+            modal.find('input').val('');
+            modal.find('input[name="replyer"]').val(replyer);
+            modalInputReplyDate.closest('div').hide();
+            modal.find('button[id != "modalCloseBtn"]').hide();
+            modalRegisterBtn.show();
+
+            modal.modal('show');
+        });
+
+        $('#modalRegisterBtn').on('click', function(){
+            replyService.add(
+                {
+                    bno : bnoValue,
+                    reply : modalInputReply.val(),
+                    replyer : modalInputReplyer.val()
+                },
+
+                function(result){
+                    alert(result);
+                    modal.find('input').val('');
+                    modal.modal('hide');
+
+                    showList(-1);
+                }
+            );
+        });
+
+        $('#modalModBtn').on('click', function(){
+        	var originalReplyer = modalInputReplyer.val();
+        	
+        	var reply = {
+        		rno : modal.data('rno'),
+        		reply : modalInputReply.val(),
+        		replyer : originalReplyer
+        	};
+        	
+        	if(!replyer){
+        		alert('로그인 후 수정이 가능합니다');
+        		modal.modal('hide');
+        		return false;
+        	}
+        	
+        	console.log('originalReplyer : '+ originalReplyer);
+        	
+        	if(replyer !== originalReplyer){
+        		alert('자신이 작성한 댓글만 수정 가능합니다.');
+        		modal.modal('hide');
+        		return false;
+        	}
+        	
+            replyService.update(
+               reply,
+                function(result){
+                    alert(result);
+                    modal.modal('hide');
+                    showList(pageNum);
+                }
+            );
+        });
+
+        $('#modalRemoveBtn').on('click', function(){
+        	var rno = modal.data('rno');
+        	
+        	console.log('rno : '+ rno);
+        	console.log('replyer : '+  replyer);
+        	
+        	if(!replyer){
+        		alert('로그인 후 삭제가 가능합니다');
+        		modal.modal('hide');
+        		return false;
+        	}
+        	
+        	var originalReplyer = modalInputReplyer.val();
+        	
+        	console.log('Original replyer : ' + originalReplyer);
+        	
+        	if(replyer !== originalReplyer){
+        		alert('자신이 작성한 댓글만 삭제 가능합니다');
+        		modal.modal('hide');
+        		return false;
+        	}
+        	
+            replyService.remove(
+                rno,
+                originalReplyer,
+                function(result){
+                    alert(result);
+                    modal.modal('hide');
+                    showList(pageNum);
+                }
+            );
+        });
+
+        $('.chat').on('click', 'li', function(){
+            var rno = $(this).data('rno');
+
+            replyService.get(
+                rno,
+                function(reply){
+                    modalInputReply.val(reply.reply);
+                    modalInputReplyer.val(reply.replyer).attr('readonly', 'readonly');
+                    modalInputReplyDate.val(replyService.displayTime(reply.replyDate)).attr('readonly', 'readonly');
+                    modal.data('rno', reply.rno);
+
+                    modal.find('button[id != "modalCloseBtn"]').hide();
+                    modalModBtn.show();
+                    modalRemoveBtn.show();
+
+                    modal.modal('show');
+                }
+            );
+        });
+
+        $('#modalCloseBtn').on('click', function(){
+            modal.modal('hide');
+        });
+
+        $('.panel-footer').on('click', 'li a', function(e){
+            e.preventDefault();
+            var targetPageNum = $(this).attr('href');
+
+            pageNum = targetPageNum;
+
+            showList(pageNum);
+        });
+
+        $('.bigPictureWrapper').on('click', function(){
+            $('.bigPicture').animate({width : '0%', height : '0%'},500);
+            setTimeout(function(){
+                $('.bigPictureWrapper').hide();
+            });
+        });
+
+        function showImage(fileCallPath){
+            $('.bigPictureWrapper').css('display', 'flex').show();
+
+            $('.bigPicture')
+                .html('<img src="/display?fileName='+fileCallPath+'">')
+                .animate({width : '100%', height : '100%'}, 1000);
+        }
+
+        function showList(page){
+        	replyService.getList(
+        		{bno : bnoValue, pageNum : page || 1},
+        		function(replyCnt, list){
+
+                    //마지막 페이지를 구하는거
+                    if(page == -1){
+                        pageNum = Math.ceil(replyCnt/10.0);
+                        showList(pageNum);
+                        return;
+                    }
+
+                    var str = '';
+
+                    if(list ===  null || list.length === 0){
+                        replyUL.html('첫 댓글의 주인공이 되세요.');
+                        return;
+                    }
+
+                    for(var i = 0; i < list.length; i++){
+                        str += '<li class="left  clearfix" data-rno="'+list[i].rno+'">';
+                        str += '<div>';
+                        str += '	<div class="header">';
+                        str += '		<strong class="primary-font">'+list[i].replyer+'</strong>';
+                        str += '		<small class="pull-right text-muted">'+replyService.displayTime(list[i].replyDate)+'</small>';
+                        str += '	</div>';
+                        str += '	<p>'+list[i].reply+'</p>';
+                        str += '</div>';
+                        str += '</li>';
+                    }
+                    replyUL.html(str);
+                    showReplyPage(replyCnt);
+                }
+        	)
+        }
+        
+//         function showList(page){
+//             replyService.getList(
+//                 {
+//                     bno : bnoValue,
+//                     pageNum : page|| 1
+//                 },
+//                 function(replyCnt, list){
+
+//                     //마지막 페이지를 구하는거
+//                     if(page == -1){
+//                         pageNum = Math.ceil(replyCnt/10.0);
+//                         showList(pageNum);
+//                         return;
+//                     }
+
+//                     var str = '';
+
+//                     if(list ===  null || list.length === 0){
+//                         replyUL.html('첫 댓글의 주인공이 되세요.');
+//                         return;
+//                     }
+
+//                     for(var i = 0; i < list.length; i++){
+//                         str += '<li class="left  clearfix" data-rno="'+list[i].rno+'">';
+//                         str += '<div>';
+//                         str += '	<div class="header">';
+//                         str += '		<strong class="primary-font">'+list[i].replyer+'</strong>';
+//                         str += '		<small class="pull-right text-muted">'+replyService.displayTime(list[i].replyDate)+'</small>';
+//                         str += '	</div>';
+//                         str += '	<p>'+list[i].reply+'</p>';
+//                         str += '</div>';
+//                         str += '</li>';
+//                     }
+//                     replyUL.html(str);
+//                     showReplyPage(replyCnt);
+//                 }
+//             );
+//         };
+
+        function showReplyPage(replyCnt){
+            var endNum = Math.ceil(pageNum / 10.0) * 10;
+            var startNum  = endNum - 9;
+
+            var prev = startNum != 1;
+            var next = false;
+
+            if(endNum * 10 >= replyCnt){
+                endNum = Math.ceil(replyCnt / 10.0);
+            }
+
+            if(endNum * 10 < replyCnt){
+                next = true;
+            }
+
+            var str =  '<ul class="pagination pull-right">';
+
+            if(prev){
+                str += '<li class="page-item"><a class="page-link" href="'+(startNum -1)+'">Previous</a></li>';
+            }
+
+            for(var i = startNum; i<=endNum; i++){
+                var active = pageNum == i ? "active": "";
+
+                str += '<li class="page-item '+active+'"><a class="page-link" href="'+i+'">'+i+'</a></li>';
+            }
+
+            if(next){
+                str += '<li class="page-item"><a class="page-link" href="'+(endNum +1)+'">Next</a></li>';
+            }
+
+            str += '</ul>';
+
+            replyPageFooter.html(str);
+        }
+
+//         replyPageFooter.on('click', 'li a', function(e){
+//         	e.preventDefault();
+        	
+//         	var targetPageNum = $(this).attr('href');
+//         	pageNum = targetPageNum;
+        	
+//         	showList(targetPageNum);
+//         });
+    });
 </script>
 <%@include file="../includes/footer.jsp"%>

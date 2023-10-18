@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.zerock.domain.Criteria;
+import org.zerock.domain.ReplyPageDTO;
 import org.zerock.domain.ReplyVO;
 import org.zerock.mapper.ReplyMapper;
 
@@ -18,8 +19,12 @@ public class ReplyService {
 		return replyMapper.getListWithPaging(cri, bno);
 	}
 	
-	public int getTotalCount(Criteria cri) {
-		return replyMapper.getTotalCount(cri);
+	public int getCountByBno(Long bno) {
+		return replyMapper.getCountByBno(bno);
+	}
+	
+	public ReplyPageDTO getListPage(Criteria cri, Long bno) {
+		return new ReplyPageDTO(replyMapper.getCountByBno(bno), replyMapper.getListWithPaging(cri, bno));
 	}
 
 	public int register(ReplyVO reply) {

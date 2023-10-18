@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.zerock.domain.Criteria;
+import org.zerock.domain.ReplyPageDTO;
 import org.zerock.domain.ReplyVO;
 import org.zerock.service.ReplyService;
 
@@ -34,14 +35,15 @@ public class ReplyController {
 	}
 
 	@GetMapping(value = "/pages/{bno}/{pageNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<List<ReplyVO>> getList(Criteria cri, @PathVariable Long bno) {
-		List<ReplyVO> list = replyService.getList(cri, bno);
+	public ResponseEntity<ReplyPageDTO> getList(@PathVariable Long bno, @PathVariable int pageNum) {
+		Criteria cri = new Criteria(pageNum, 10);
+		ReplyPageDTO replyPageDTO = replyService.getListPage(cri, bno);
 
-		return new ResponseEntity<List<ReplyVO>>(list, HttpStatus.OK);
+		return new ResponseEntity<ReplyPageDTO>(replyPageDTO, HttpStatus.OK);
 	}
 	
 	@PostMapping(value = "/new", consumes = MediaType.APPLICATION_JSON_VALUE)
-	public ResponseEntity<String> create(@RequestBody ReplyVO reply) {
+	public ResponseEntity<String> create(@RequestBody ReplyVO reply) {	
 		int insertCount = replyService.register(reply);
 
 		return insertCount == 1 

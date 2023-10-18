@@ -102,7 +102,7 @@
                 </div>
                 <div class="form-group">
                     <label>Replyer</label>
-                    <input class="form-control" name='replyer' value='replyer' readonly>
+                    <input class="form-control" name='replyer'>
                 </div>
                 <div class="form-group">
                     <label>Reply Date</label>
@@ -224,27 +224,10 @@ var replyPageFooter = $('.panel-footer');
         });
 
         $('#modalModBtn').on('click', function(){
-        	var originalReplyer = modalInputReplyer.val();
-        	
         	var reply = {
         		rno : modal.data('rno'),
         		reply : modalInputReply.val(),
-        		replyer : originalReplyer
         	};
-        	
-        	if(!replyer){
-        		alert('로그인 후 수정이 가능합니다');
-        		modal.modal('hide');
-        		return false;
-        	}
-        	
-        	console.log('originalReplyer : '+ originalReplyer);
-        	
-        	if(replyer !== originalReplyer){
-        		alert('자신이 작성한 댓글만 수정 가능합니다.');
-        		modal.modal('hide');
-        		return false;
-        	}
         	
             replyService.update(
                reply,
@@ -259,28 +242,8 @@ var replyPageFooter = $('.panel-footer');
         $('#modalRemoveBtn').on('click', function(){
         	var rno = modal.data('rno');
         	
-        	console.log('rno : '+ rno);
-        	console.log('replyer : '+  replyer);
-        	
-        	if(!replyer){
-        		alert('로그인 후 삭제가 가능합니다');
-        		modal.modal('hide');
-        		return false;
-        	}
-        	
-        	var originalReplyer = modalInputReplyer.val();
-        	
-        	console.log('Original replyer : ' + originalReplyer);
-        	
-        	if(replyer !== originalReplyer){
-        		alert('자신이 작성한 댓글만 삭제 가능합니다');
-        		modal.modal('hide');
-        		return false;
-        	}
-        	
             replyService.remove(
                 rno,
-                originalReplyer,
                 function(result){
                     alert(result);
                     modal.modal('hide');

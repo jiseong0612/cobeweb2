@@ -22,18 +22,20 @@
 		<beans:property name="suffix" value=".jsp" />
 	</beans:bean>
 	
-	
 	<context:component-scan base-package="org.zerock.controller" />
 	
 	<beans:bean id="multipartResolver" class="org.springframework.web.multipart.support.StandardServletMultipartResolver">
 	</beans:bean>
 	
-	  <beans:bean id = "globalInterceptor" class = "org.zerock.common.intercepter.GlobalInterceptor"></beans:bean><!-- 3 -->
-    <mvc:interceptors>
-        <mvc:interceptor>
-        <mvc:mapping path="/**"/><!--1-->
+	<beans:bean id = "globalInterceptor" class = "org.zerock.common.intercepter.GlobalInterceptor"></beans:bean><!-- 3 -->
+	<mvc:interceptors>
+		<mvc:interceptor>
+		<mvc:mapping path="/**"/>
+			<exclude-mapping path="/resources/**"/>
+			<exclude-mapping path="/**/*.css"/>
+			<exclude-mapping path="/**/*.js"/>
         
-        <beans:ref bean="globalInterceptor"/><!-- 2 -->
-        </mvc:interceptor>
-    </mvc:interceptors>
+			<beans:ref bean="globalInterceptor"/><!-- 2 -->
+		</mvc:interceptor>
+	</mvc:interceptors>
 </beans:beans>

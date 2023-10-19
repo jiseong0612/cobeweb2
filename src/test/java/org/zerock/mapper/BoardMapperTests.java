@@ -76,8 +76,6 @@ public class BoardMapperTests {
 	public void getListWithPaging() {
 		Criteria cri = new Criteria();
 		
-		cri.setType("TCW");
-		cri.setKeyword("11");
 		List<BoardVO> list = boardMapper.getListWithPaging(cri);
 	}
 	

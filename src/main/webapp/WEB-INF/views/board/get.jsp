@@ -4,6 +4,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt"%>
 <%@include file="../includes/header.jsp"%>
 <%@include file="replyService.jsp"%>
+<script src="../../resources/summernote/summernote-lite.min.js"></script>
 
 <div class="row">
     <div class="col-lg-12">
@@ -28,7 +29,7 @@
 
                 <div class="form-group">
                     <label>Text area</label>
-                    <textarea class="form-control" rows="3" name='content' readonly="readonly"><c:out value="${board.content}" /></textarea>
+                    <textarea class="form-control" rows="3" name='content' readonly="readonly" id="summernote"><c:out value="${board.content}"/></textarea>
                 </div>
 
                 <div class="form-group">
@@ -144,7 +145,8 @@ var replyer = null;
 var pageNum = 1;
 var replyPageFooter = $('.panel-footer');
     $(document).ready(function() {
-
+    	$('#summernote').summernote('disable');
+    	
         showList(1);
 
         $.getJSON("/board/getAttachList", {bno : bnoValue},
@@ -214,7 +216,6 @@ var replyPageFooter = $('.panel-footer');
                 },
 
                 function(result){
-                    alert(result);
                     modal.find('input').val('');
                     modal.modal('hide');
 
@@ -232,7 +233,6 @@ var replyPageFooter = $('.panel-footer');
             replyService.update(
                reply,
                 function(result){
-                    alert(result);
                     modal.modal('hide');
                     showList(pageNum);
                 }
@@ -245,7 +245,6 @@ var replyPageFooter = $('.panel-footer');
             replyService.remove(
                 rno,
                 function(result){
-                    alert(result);
                     modal.modal('hide');
                     showList(pageNum);
                 }

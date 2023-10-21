@@ -94,7 +94,7 @@ public class UploadController {
 		try {
 			HttpHeaders header = new HttpHeaders();
 			
-			header.setContentType(MediaType.parseMediaType(Files.probeContentType(file.toPath())));
+			header.add("content-Type", Files.probeContentType(file.toPath()));
 			
 			result = new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
 		}catch (Exception e) {

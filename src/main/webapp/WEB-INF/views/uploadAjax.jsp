@@ -42,7 +42,8 @@ var showUploadedFile = function(uploadResultArr){
 		if(!obj.image){
 			str += '<li><img src="/resources/img/attachment.png"></li>';
 		}else{
-			str += '<li><img src="/display?fileName='+obj.uploadPath+'/s_'+obj.uuid+'_'+obj.fileName+'">'+obj.fileName+'</li>';
+			var encodeFileName = encodeURIComponent(obj.uploadPath+'/s_'+obj.uuid+'_'+obj.fileName);
+			str += '<li><img src="/display?fileName='+encodeFileName+'">'+obj.fileName+'</li>';
 		}
 	});
 	

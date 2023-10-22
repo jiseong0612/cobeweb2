@@ -142,7 +142,6 @@ var showUploadedFile = function(uploadResultArr){
 		//삭제 버튼 클릭
 		$('.uploadResult').on('click', 'span', function(){
 			var thisItem = $(this);
-// 			var targetFile = decodeURIComponent($(this).data('file'));
 			var targetFile = $(this).data('file');
 			var type = $(this).data('type');
 			

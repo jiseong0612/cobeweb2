@@ -3,6 +3,7 @@ package org.zerock.controller;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.MalformedURLException;
 import java.net.URLDecoder;
 import java.nio.file.Files;
@@ -15,7 +16,6 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletResponse;
 
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
@@ -33,7 +33,6 @@ import org.zerock.domain.AttachFileDTO;
 
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnailator;
-import oracle.jdbc.proxy.annotation.Post;
 
 @Controller
 @Slf4j
@@ -145,9 +144,9 @@ public class UploadController {
 	
 	@PostMapping("/deleteFile")
 	@ResponseBody
-	public ResponseEntity<String> deleteFile(String fileName, String type){
+	public ResponseEntity<String> deleteFile(String fileName, String type) throws UnsupportedEncodingException{
 		File file;
-		fileName = new URLDecoder().decode(fileName);	//스프링에서 post로 받을때 디코딩이 안된다.
+		fileName = new URLDecoder().decode(fileName, "UTF-8");	//스프링에서 post로 받을때 디코딩이 안된다.
 		try {
 			//파일 삭제
 			file = new File(UPLOAD_FOLDER + fileName);

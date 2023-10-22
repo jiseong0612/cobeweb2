@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URLDecoder;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -32,10 +33,12 @@ import org.zerock.domain.AttachFileDTO;
 
 import lombok.extern.slf4j.Slf4j;
 import net.coobird.thumbnailator.Thumbnailator;
+import oracle.jdbc.proxy.annotation.Post;
 
 @Controller
 @Slf4j
 public class UploadController {
+	private final static String UPLOAD_FOLDER = "C:\\Users\\hjs\\Desktop\\test\\";
 
 	@GetMapping("/uploadForm")
 	public String uploadForm() {
@@ -52,9 +55,8 @@ public class UploadController {
 			@RequestParam Map<String, String> inMap, HttpServletResponse response)
 			throws IllegalStateException, IOException {
 		List<AttachFileDTO> list = new ArrayList<AttachFileDTO>();
-		String uploadFolder = "C:\\Users\\hjs\\Desktop\\test";
 		String uploadFolderPath = getFolder();
-		File uploadPath = new File(uploadFolder, uploadFolderPath);
+		File uploadPath = new File(UPLOAD_FOLDER, uploadFolderPath);
 
 		// today 년/월/일 폴더 생성
 		if (!uploadPath.exists()) {
@@ -101,14 +103,13 @@ public class UploadController {
 
 	@GetMapping("/display")
 	public ResponseEntity<byte[]> getFiles(String fileName) {
-		String uploadFolder = "C:\\Users\\hjs\\Desktop\\test";
-		File file = new File(uploadFolder, fileName);
+		File file = new File(UPLOAD_FOLDER, fileName);
 
 		ResponseEntity<byte[]> result = null;
 		try {
 			HttpHeaders header = new HttpHeaders();
 
-//			header.add("content-Type", Files.probeContentType(file.toPath()));
+			header.add("content-Type", Files.probeContentType(file.toPath()));
 
 			result = new ResponseEntity<byte[]>(FileCopyUtils.copyToByteArray(file), header, HttpStatus.OK);
 		} catch (Exception e) {
@@ -140,6 +141,31 @@ public class UploadController {
 			e.printStackTrace();
 		}
 		return new ResponseEntity<Resource>(resource, header, HttpStatus.OK);
+	}
+	
+	@PostMapping("/deleteFile")
+	@ResponseBody
+	public ResponseEntity<String> deleteFile(String fileName, String type){
+		File file;
+		fileName = new URLDecoder().decode(fileName);	//스프링에서 post로 받을때 디코딩이 안된다.
+		try {
+			//파일 삭제
+			file = new File(UPLOAD_FOLDER + fileName);
+			file.delete();
+			
+			//섬네일 이미지도 삭제
+			if(type != null && type.equals("img")) {
+				String largeFileName = file.getAbsolutePath().replace("s_", "");
+				file = new File(largeFileName);
+				file.delete();
+			}
+			
+		}catch (Exception e) {
+			e.printStackTrace();
+			return new ResponseEntity<String>(HttpStatus.NOT_FOUND);
+		}
+		
+		return new ResponseEntity<String>("deleted", HttpStatus.OK);
 	}
 
 	private String getFolder() {

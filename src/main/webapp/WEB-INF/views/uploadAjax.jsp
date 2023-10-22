@@ -90,17 +90,18 @@ var showUploadedFile = function(uploadResultArr){
 	$(uploadResultArr).each(function(i, obj){
 		if(obj.type === 'attach'){
 			var encodeFileName = encodeURIComponent(obj.uploadPath+'/'+obj.uuid+'_'+obj.fileName);
-			str += '<li><a href="/download?fileName='+encodeFileName+'"><img src="/resources/img/attachment.png">'+obj.fileName+'</a></li>';
+			str += '<li><a href="/download?fileName='+encodeFileName+'"><img src="/resources/img/attachment.png">'+obj.fileName+'</a><span data-file="'+encodeFileName+'">x</span></li>';
 		}else if(obj.type === 'video'){
 			var encodeFileName = encodeURIComponent(obj.uploadPath+'/'+obj.uuid+'_'+obj.fileName);
 			str += '<li>';
 			str += '	<video controls="controls" width="700">';
 			str += '		<source src="/display?fileName='+encodeFileName+'">';
 			str += '	</video>';
+			str += obj.fileName + '<span data-file="'+encodeFileName+'">x</span>';
 			str += '</li>';
 		}else if(obj.type ==='img'){
 			var encodeFileName = encodeURIComponent(obj.uploadPath+'/s_'+obj.uuid+'_'+obj.fileName);
-			str += '<li><img src="/display?fileName='+encodeFileName+'">'+obj.fileName+'</li>';
+			str += '<li><img src="/display?fileName='+encodeFileName+'">'+obj.fileName+'<span data-file="'+encodeFileName+'" data-type="img">x</span></li>';
 		}
 	});
 	
@@ -108,6 +109,7 @@ var showUploadedFile = function(uploadResultArr){
 };
 
 	$(document).ready(function(){
+		//업로드 버튼 클릭
 		$('button').on('click', function(){
 			var files = $('[name=uploadFile]')[0].files;
 			
@@ -133,6 +135,24 @@ var showUploadedFile = function(uploadResultArr){
 					$('[type=file]').val('');
 					
 					showUploadedFile(result);
+				}
+			});
+		});
+		
+		//삭제 버튼 클릭
+		$('.uploadResult').on('click', 'span', function(){
+			var thisItem = $(this);
+// 			var targetFile = decodeURIComponent($(this).data('file'));
+			var targetFile = $(this).data('file');
+			var type = $(this).data('type');
+			
+			$.ajax({
+				type : 'post',
+				url : '/deleteFile',
+				data : {fileName :targetFile, type :type},
+				dataType : 'text',
+				success : function(result){
+					thisItem.closest('li').remove();
 				}
 			});
 		});

@@ -4,44 +4,101 @@
 <html>
 <head>
 <meta charset="UTF-8">
+<style>
+.uploadResult {
+	width: 100%;
+	background-color: gray;
+}
+
+.uploadResult ul {
+	display: flex;
+	flex-flow: row;
+	justify-content: center;
+	align-items: center;
+}
+
+.uploadResult ul li {
+	list-style: none;
+	padding: 10px;
+}
+
+.uploadResult ul li img {
+	width: 100px;
+}
+</style>
+
+<style>
+.bigPictureWrapper {
+  position: absolute;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  top:0%;
+  width:100%;
+  height:100%;
+  background-color: gray; 
+  z-index: 100;
+}
+
+.bigPicture {
+  position: relative;
+  display:flex;
+  justify-content: center;
+  align-items: center;
+}
+</style>
 <script src="https://code.jquery.com/jquery-latest.min.js"></script>
 <title>Insert title here</title>
 </head>
 <body>
-<h1>upload with ajax</h1>
-<div>
+<h2>uploadAjax</h2>
+	<div class="uploadDiv">
+		<input type="file" name="uploadFile"  multiple>
+	</div>
+	<button id="uploadBtn">submit</button>
+	<div class="uploadResult">
+		<ul>
+		</ul>
+	</div>
 	
-	<video controls="controls" width="1000">
-		<source src="/display?fileName=2023/10/22/5d64ae0a-66c9-4c0d-91be-a8e5162abfde_SampleVideo_10mb.mp4">
-		<source src="/display?fil4">
-		
-		Download the
-		  <a href="/display?fileName=2023/10/22/5d64ae0a-66c9-4c0d-91be-a8e5162abfde_SampleVideo_10mb.mp4">WEBM</a>
-		  or
-		  <a href="/media/cc0-videos/flower.mp4">MP4</a>
- 	 video.
-	</video>
-	<br>
-	<br>
-	<br>
-	<input type="file" name="uploadFile"  multiple="multiple">
-	<br>
-	
-	<button>submit</button>
-</div>
-<div class="uploadDiv">
-	<ul></ul>
-</div>
+	<div class="bigPictureWrapper">
+		<div class="bigPicture">
+		</div>
+	</div>
 <script>
-var uploadResult = $('.uploadDiv ul');
+var maxSize = 1024 * 1024 * 50;
+var regex = new RegExp("(.*?)\.(sh|zip|alz)$");
+var uploadResult = $('.uploadResult ul');
+
+var checkExtension = function(fileName, fileSize){
+	if(fileSize >= maxSize){
+		alert('파일 사이즈 초과!');
+		return false;
+	}
+	
+	if(regex.test(fileName)){
+		alert('해당 종류의 파일은 업로드할 수 없습니다.');
+		return false;
+	}
+	
+	return true;
+};
 
 var showUploadedFile = function(uploadResultArr){
 	var str = '';
 	
 	$(uploadResultArr).each(function(i, obj){
-		if(!obj.image){
-			str += '<li><img src="/resources/img/attachment.png"></li>';
-		}else{
+		if(obj.type === 'attach'){
+			var encodeFileName = encodeURIComponent(obj.uploadPath+'/'+obj.uuid+'_'+obj.fileName);
+			str += '<li><a href="/download?fileName='+encodeFileName+'"><img src="/resources/img/attachment.png">'+obj.fileName+'</a></li>';
+		}else if(obj.type === 'video'){
+			var encodeFileName = encodeURIComponent(obj.uploadPath+'/'+obj.uuid+'_'+obj.fileName);
+			str += '<li>';
+			str += '	<video controls="controls" width="700">';
+			str += '		<source src="/display?fileName='+encodeFileName+'">';
+			str += '	</video>';
+			str += '</li>';
+		}else if(obj.type ==='img'){
 			var encodeFileName = encodeURIComponent(obj.uploadPath+'/s_'+obj.uuid+'_'+obj.fileName);
 			str += '<li><img src="/display?fileName='+encodeFileName+'">'+obj.fileName+'</li>';
 		}
@@ -56,7 +113,12 @@ var showUploadedFile = function(uploadResultArr){
 			
 			var formData = new FormData();
 			
+			
 			for(var i = 0; i<files.length; i++){
+ 				if(!checkExtension(files[i].name, files[i].size)){
+					return false;
+				}
+				
 				formData.append('uploadFile', files[i]);
 			}
 			

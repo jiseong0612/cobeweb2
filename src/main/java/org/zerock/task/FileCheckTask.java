@@ -9,7 +9,7 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class FileCheckTask {
 
-	@Scheduled(cron="2 * * * * *")
+	@Scheduled(cron="0 0 2 * * *")
 	public void checkFiless()throws Exception{
 		log.debug("file check task run......");
 		log.debug("=====================");

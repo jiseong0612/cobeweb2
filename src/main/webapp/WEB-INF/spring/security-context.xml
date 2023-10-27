@@ -7,13 +7,14 @@
 
 	<bean id="customAccessdeniedHandler" class="org.zerock.security.CustomAccessdeniedHandler"></bean>
 	<bean id="customLoginSuccessHandler" class="org.zerock.security.CustomLoginSuccessHandler"></bean>
+	<bean id="customLogoutSuccessHandler" class="org.zerock.security.CustomLogoutSuccessHandler"></bean>
 	
 	<security:http use-expressions="true">
 		<security:intercept-url  pattern="/sample/all" access="permitAll"/>
 		<security:intercept-url pattern="/sample/member" access="hasRole('ROLE_MEMBER')"/>
 		<security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')"/>
 		<security:form-login login-page="/customLogin" authentication-success-handler-ref="customLoginSuccessHandler"/>
-		<security:logout logout-url="/customLogout" invalidate-session="true" />
+		<security:logout logout-url="/customLogout" invalidate-session="true"  success-handler-ref="customLogoutSuccessHandler"/>
 		<security:access-denied-handler ref="customAccessdeniedHandler"/>
 	</security:http>
 

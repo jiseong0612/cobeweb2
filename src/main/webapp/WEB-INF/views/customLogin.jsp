@@ -13,10 +13,10 @@
 	
 	<form method="post" action="/login">
 		<div>
-			<input type="text" name="username" value="admin">
+			<input type="text" name="username" value="admin90">
 		</div>
 		<div>
-			<input type="text" name="password" value="admin">
+			<input type="text" name="password" value="pw90">
 		</div>
 		<div>
 			<input type="submit">

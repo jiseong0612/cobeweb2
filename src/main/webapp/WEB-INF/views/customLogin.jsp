@@ -21,6 +21,7 @@
 		<div>
 			<input type="submit">
 		</div>
+		<textarea rows="" cols="">${_csrf }</textarea>
 		<input type='hidden' name="${_csrf.parameterName }" value="${_csrf.token }">
 	</form>
 </body>

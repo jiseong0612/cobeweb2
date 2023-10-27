@@ -7,6 +7,7 @@
 <title>Insert title here</title>
 </head>
 <body>
-	member
+	<h1>member</h1>
+	<a href="/customLogout">로그아웃</a>
 </body>
 </html>

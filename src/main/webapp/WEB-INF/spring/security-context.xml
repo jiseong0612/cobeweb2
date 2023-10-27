@@ -1,13 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:security="http://www.springframework.org/schema/security"
 	xsi:schemaLocation="http://www.springframework.org/schema/security http://www.springframework.org/schema/security/spring-security.xsd
-		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
 
 	<bean id="customAccessdeniedHandler" class="org.zerock.security.CustomAccessdeniedHandler"></bean>
 	<bean id="customLoginSuccessHandler" class="org.zerock.security.CustomLoginSuccessHandler"></bean>
 	<bean id="customLogoutSuccessHandler" class="org.zerock.security.CustomLogoutSuccessHandler"></bean>
+<!-- 	<bean id="customNoOpPasswordEncoder" class="org.zerock.security.CustomNoOpPasswordEncoder"></bean> -->
+	<bean id="bcryptPasswordEncoder" class="org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder"></bean>
 	
 	<security:http use-expressions="true">
 		<security:intercept-url  pattern="/sample/all" access="permitAll"/>
@@ -20,11 +24,14 @@
 
 	<security:authentication-manager>
 		<security:authentication-provider>
-		 <security:user-service>
-		 	<security:user name="member" password="{noop}member" authorities="ROLE_MEMBER"/>
-		 	<security:user name="admin" password="{noop}admin" authorities="ROLE_ADMIN, ROLE_MEMBER"/>
-		 </security:user-service>
+			<security:jdbc-user-service data-source-ref="dataSource" authorities-by-username-query=""/>
+			<security:password-encoder ref="bcryptPasswordEncoder"/>
+<!-- 			<security:user-service> -->
+<!-- 				<security:user name="member" password="{noop}member" authorities="ROLE_MEMBER"/> -->
+<!-- 				<security:user name="admin" password="{noop}admin" authorities="ROLE_ADMIN, ROLE_MEMBER"/> -->
+<!-- 			</security:user-service> -->
 		</security:authentication-provider>
 	</security:authentication-manager>
 
+	<context:component-scan base-package="org.zerock.security"></context:component-scan>
 </beans>

@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.zerock.domain.MemberVO;
+import org.zerock.mapper.MemberMapper;
 
 import lombok.extern.log4j.Log4j;
 
@@ -24,7 +26,19 @@ public class MemberTests {
 	private PasswordEncoder pwencoder;
 	
 	@Autowired
+	private MemberMapper mmeberMapper;
+	
+	@Autowired
 	private DataSource ds;
+	
+	@Test
+	public void getMember() {
+		String userid ="admin99";
+		
+		MemberVO member = mmeberMapper.read(userid);
+		
+		log.info("member = " + member);
+	}
 	
 	@Test
 	public void testInsertMember() {

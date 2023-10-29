@@ -19,6 +19,10 @@
 			<input type="text" name="password" value="pw90">
 		</div>
 		<div>
+			<input type="checkbox" name="remember-me" id="rmChkBox">
+			<label for="rmChkBox">자동 로그인</label>
+		</div>
+		<div>
 			<input type="submit">
 		</div>
 		<textarea rows="" cols="">${_csrf }</textarea>

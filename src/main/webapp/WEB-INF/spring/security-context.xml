@@ -20,8 +20,9 @@
 		<security:intercept-url pattern="/sample/member" access="hasRole('ROLE_MEMBER')"/>
 		<security:intercept-url pattern="/sample/admin" access="hasRole('ROLE_ADMIN')"/>
 		<security:form-login login-page="/customLogin" authentication-success-handler-ref="customLoginSuccessHandler"/>
-		<security:logout logout-url="/customLogout" invalidate-session="true"  success-handler-ref="customLogoutSuccessHandler"/>
+		<security:logout logout-url="/customLogout" invalidate-session="true" success-handler-ref="customLogoutSuccessHandler" delete-cookies="remember-me,JSESSION_ID"/>
 		<security:access-denied-handler ref="customAccessdeniedHandler"/>
+		<security:remember-me data-source-ref="dataSource" token-validity-seconds="604800"/>
 	</security:http>
 
 	<security:authentication-manager>

@@ -8,5 +8,7 @@
 </head>
 <body>
 	all
+	<br>
+	<a href="/board/list">게시판</a>
 </body>
 </html>

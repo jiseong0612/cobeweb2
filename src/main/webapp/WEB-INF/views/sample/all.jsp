@@ -14,6 +14,21 @@
 		<a href="/customLogin">로그인</a>
 	</sec:authorize>
 	
+	<sec:authorize access="hasRole('ROLE_MEMBER')">
+		멤버 권한
+		<br><br>
+	</sec:authorize>
+	
+	<sec:authorize access="hasRole('ROLE_ADMIN')">
+		관리자 권한
+		<br><br>
+	</sec:authorize>
+	
+	<sec:authorize access="hasAnyRole('ROLE_MEMBER, ROLE_ADMIN')">
+		멤버 또는 관리자
+		<br><br>
+	</sec:authorize>
+	
 	<%-- 인증된 사용자 --%>
 	<sec:authorize access="isAuthenticated()">
 		<a href="/customLogout">로그아웃</a>

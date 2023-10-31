@@ -13,10 +13,13 @@
 	
 	<form method="post" action="/login">
 		<div>
-			<input type="text" name="username" value="admin90">
+			userid:<input type="text" name="userid" value="admin90">
 		</div>
 		<div>
-			<input type="text" name="password" value="pw90">
+			username:<input type="text" name="username" value="관리자90">
+		</div>
+		<div>
+			userpw:<input type="text" name="password" value="pw90">
 		</div>
 		<div>
 			<input type="checkbox" name="remember-me" id="rmChkBox">
